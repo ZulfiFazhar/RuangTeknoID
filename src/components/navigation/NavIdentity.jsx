@@ -17,7 +17,7 @@ export function NavIdentity() {
               {/* <Command className="size-4" /> */}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">Forum Teknologi</span>
+              <span className="truncate font-semibold">Ruang Teknologi</span>
               <span className="truncate font-semibold">Indonesia</span>
             </div>
           </Link>

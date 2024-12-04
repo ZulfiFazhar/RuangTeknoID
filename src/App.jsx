@@ -2,10 +2,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
-import Inbox from "./pages/Inbox";
-import Calendar from "./pages/Calendar";
-import Search from "./pages/Search";
-import Settings from "./pages/Settings";
+import Bookmark from "./pages/Bookmark";
+import Chatbot from "./pages/Chatbot";
+import Posts from "./pages/Posts";
+import Threads from "./pages/Threads";
 import "./App.css";
 
 function App() {
@@ -14,10 +14,10 @@ function App() {
       <MainLayout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/Inbox" element={<Inbox />} />
-          <Route path="/Calendar" element={<Calendar />} />
-          <Route path="/Search" element={<Search />} />
-          <Route path="/Settings" element={<Settings />} />
+          <Route path="/bookmark" element={<Bookmark />} />
+          <Route path="/chatbot" element={<Chatbot />} />
+          <Route path="/posts" element={<Posts />} />
+          <Route path="/threads" element={<Threads />} />
         </Routes>
       </MainLayout>
     </Router>
