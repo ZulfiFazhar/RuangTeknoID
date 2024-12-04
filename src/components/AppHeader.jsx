@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { data } from "@/components/NavMain";
+import { data } from "@/components/navigation/NavMain";
 
 export function AppHeader() {
   const location = useLocation();
