@@ -5,9 +5,7 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
-  // BreadcrumbLink,
   BreadcrumbPage,
-  // BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
@@ -15,9 +13,17 @@ import { data } from "@/components/navigation/NavMain";
 
 export function AppHeader() {
   const location = useLocation();
-  const currentPage = data.navMain[0].items.find(
-    (item) => item.url === location.pathname
-  );
+
+  // Fungsi untuk menemukan halaman berdasarkan URL
+  const findCurrentPage = (url) => {
+    const allNavItems = [
+      ...data.navAction.flatMap((nav) => nav.items),
+      ...data.navMain.flatMap((nav) => nav.items),
+    ];
+    return allNavItems.find((item) => item.url === url);
+  };
+
+  const currentPage = findCurrentPage(location.pathname);
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">

@@ -2,11 +2,11 @@
 import { Link } from "react-router-dom";
 import {
   ChevronRight,
-  Calendar,
   Home,
-  Inbox,
-  Search,
-  Settings,
+  Newspaper,
+  Sparkles,
+  Bookmark,
+  ScrollText,
 } from "lucide-react";
 import {
   SidebarGroup,
@@ -23,35 +23,41 @@ import {
 } from "@/components/ui/collapsible";
 
 export const data = {
-  navMain: [
+  navAction: [
     {
-      title: "Dashboard",
-      url: "/",
+      title: "Action Menu",
       items: [
         {
-          title: "Home",
+          title: "Beranda",
           url: "/",
           icon: Home,
         },
         {
-          title: "Inbox",
-          url: "/Inbox",
-          icon: Inbox,
+          title: "Penanda",
+          url: "/bookmark",
+          icon: Bookmark,
         },
         {
-          title: "Calendar",
-          url: "/Calendar",
-          icon: Calendar,
+          title: "Asisten AI",
+          url: "/chatbot",
+          icon: Sparkles,
+        },
+      ],
+    },
+  ],
+  navMain: [
+    {
+      title: "Komunitas",
+      items: [
+        {
+          title: "Threads",
+          url: "/threads",
+          icon: Newspaper,
         },
         {
-          title: "Search",
-          url: "/Search",
-          icon: Search,
-        },
-        {
-          title: "Settings",
-          url: "/Settings",
-          icon: Settings,
+          title: "Posts",
+          url: "/posts",
+          icon: ScrollText,
         },
       ],
     },
@@ -60,7 +66,37 @@ export const data = {
 
 export function NavMain() {
   return (
-    <>
+    <SidebarMenu>
+      {data.navAction.map((item) => (
+        <SidebarGroup key={item.title}>
+          {/* <SidebarGroupLabel className="font-bold">
+            {item.title}
+          </SidebarGroupLabel> */}
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {item.items.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link to={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        // <SidebarMenuItem key={item.title}>
+        //   <SidebarMenuButton asChild>
+        //     <Link to={item.url}>
+        //       <item.icon />
+        //       <span>{item.title}</span>
+        //     </Link>
+        //   </SidebarMenuButton>
+        // </SidebarMenuItem>
+      ))}
+
       {data.navMain.map((item) => (
         <Collapsible
           key={item.title}
@@ -74,7 +110,7 @@ export function NavMain() {
               className="group/label text-sm text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
             >
               <CollapsibleTrigger>
-                <span className="font-bold">{item.title} </span>
+                <span className="font-bold text-black/70">{item.title} </span>
                 <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
               </CollapsibleTrigger>
             </SidebarGroupLabel>
@@ -97,6 +133,6 @@ export function NavMain() {
           </SidebarGroup>
         </Collapsible>
       ))}
-    </>
+    </SidebarMenu>
   );
 }
