@@ -6,9 +6,9 @@ import {
   SidebarHeader,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { NavIdentity } from "@/components/NavIdentity";
-import { NavMain } from "@/components/NavMain";
-import { NavUser } from "@/components/NavUser";
+import { NavIdentity } from "@/components/navigation/NavIdentity";
+import { NavMain } from "@/components/navigation/NavMain";
+import { NavUser } from "@/components/navigation/NavUser";
 
 export function AppSidebar() {
   return (
