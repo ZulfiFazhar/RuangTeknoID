@@ -1,2 +1,2 @@
-const Home = () => <div>Home Page</div>;
+const Home = () => <div>Mutiara Fatiha</div>;
 export default Home;
