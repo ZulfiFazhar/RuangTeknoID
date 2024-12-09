@@ -9,12 +9,18 @@ export default function ChatMessage({ message }) {
       } mb-4`}
     >
       <div
-        className={`flex items-center ${
+        className={`flex ${
           message.sender === "user" ? "bg-gray-100" : ""
-        } p-3 rounded-lg max-w-xs text-black`}
+        } items-start p-3 rounded-lg text-black ${
+          message.sender === "user" ? "max-w-[80%]" : "max-w-[95%]"
+        }`}
       >
-        {message.sender === "bot" && <Sparkles className="mr-4" size={20} />}
-        {message.text}
+        {message.sender === "bot" && (
+          <div className="mr-4 flex-shrink-0">
+            <Sparkles className="w-5 h-5" />
+          </div>
+        )}
+        <div className="text-sm leading-relaxed">{message.text}</div>
       </div>
     </div>
   );
