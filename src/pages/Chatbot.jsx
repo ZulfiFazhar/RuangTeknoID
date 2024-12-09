@@ -100,10 +100,12 @@ export default function ChatbotPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-[88vh]">
+      <h1 className="text-3xl font-semibold text-center mb-10 cursor-default">
+        Hello, John Doe
+      </h1>
       <div className="w-full max-w-3xl h-fit flex flex-col overflow-hidden relative">
-        {/* Kontainer pesan */}
         <div
-          className="flex-1 overflow-auto p-4 bg-white"
+          className="flex-1 overflow-auto p-4"
           ref={messagesContainerRef}
           onScroll={handleScroll}
         >
@@ -114,7 +116,6 @@ export default function ChatbotPage() {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Tombol Scroll Down */}
         {isScrolledUp && (
           <Button
             variant="outline"
@@ -126,14 +127,13 @@ export default function ChatbotPage() {
                 inputContainerRef.current
                   ? inputContainerRef.current.offsetHeight + 10
                   : 60
-              }px`, // Dinamis berdasarkan tinggi input
+              }px`,
             }}
           >
             <ArrowDown />
           </Button>
         )}
 
-        {/* Input area */}
         <div ref={inputContainerRef} className="w-full">
           <ChatInput
             inputValue={inputValue}
