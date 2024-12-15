@@ -1,12 +1,12 @@
 import PropTypes from "prop-types";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
-import api from "@/api/api"; // Import API helper
+import api from "@/api/api";
 import {
   Dialog,
   DialogContent,
@@ -20,15 +20,18 @@ export function ResetPassword({ className, ...props }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [successDialog, setSuccessDialog] = useState(false); // State untuk dialog sukses
+  const [successDialog, setSuccessDialog] = useState(false);
   const navigate = useNavigate();
-  const { token } = useParams(); // Ambil token dari URL
+  const url = window.location.href;
+  const urlObj = new URL(url);
+  const token = urlObj.pathname.split("/").pop();
+
+  console.log(token);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(null); // Reset error state sebelum submit
+    setError(null);
 
-    // Validasi konfirmasi password
     if (newPassword !== confirmPassword) {
       setError("Passwords do not match. Please try again.");
       return;
@@ -37,16 +40,12 @@ export function ResetPassword({ className, ...props }) {
     setLoading(true);
 
     try {
-      const response = await api.post(`/user/reset-password/${token}`, {
+      await api.post(`/user/reset-password/${token}`, {
         newPassword,
       });
 
-      console.log(response.data);
-
-      // Tampilkan dialog sukses
       setSuccessDialog(true);
     } catch (err) {
-      // Tangkap pesan error dari backend
       setError(
         err.response?.data?.error ||
           "Failed to reset password. Please try again."
@@ -57,8 +56,8 @@ export function ResetPassword({ className, ...props }) {
   };
 
   const handleDialogClose = () => {
-    setSuccessDialog(false); // Tutup dialog sukses
-    navigate("/login"); // Redirect ke halaman login
+    setSuccessDialog(false);
+    navigate("/login");
   };
 
   return (
@@ -112,7 +111,6 @@ export function ResetPassword({ className, ...props }) {
         </div>
       </form>
 
-      {/* Dialog untuk menampilkan pesan sukses */}
       {successDialog && (
         <Dialog open={successDialog}>
           <DialogContent>
