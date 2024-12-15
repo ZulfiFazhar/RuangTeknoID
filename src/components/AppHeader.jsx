@@ -10,6 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { data } from "@/components/navigation/NavMain";
+// import { LoginButton } from "./auth/LoginButton";
 
 export function AppHeader() {
   const location = useLocation();
@@ -26,11 +27,12 @@ export function AppHeader() {
   const currentPage = findCurrentPage(location.pathname);
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-      <div className="flex items-center gap-2 px-4">
+    <header className="flex h-16 shrink-0 items-center gap-2 px-4 justify-between transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      {/* Bagian kiri */}
+      <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-2" />
-        <Separator orientation="vertical" className="mr-2 h-4" />
-        <Breadcrumb>
+        <Separator orientation="vertical" className="h-4" />
+        <Breadcrumb className="items-start">
           <BreadcrumbList>
             {currentPage ? (
               <BreadcrumbItem>
@@ -46,6 +48,9 @@ export function AppHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
+
+      {/* Bagian kanan */}
+      <div>{/* <LoginButton /> */}</div>
     </header>
   );
 }
