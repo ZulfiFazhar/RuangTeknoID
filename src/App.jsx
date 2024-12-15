@@ -16,10 +16,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Auth />} />
         <Route path="/register" element={<Auth />} />
-        <Route
-          path="/reset-password/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9*"
-          element={<ResetPassword />}
-        />
+        <Route path="/reset-password/*" element={<ResetPassword />} />
         <Route
           path="/*"
           element={

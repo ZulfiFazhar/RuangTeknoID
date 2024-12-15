@@ -53,7 +53,7 @@ export default function AuthPage() {
       {/* Kanan: Gambar */}
       <div className="relative hidden bg-muted lg:block">
         <img
-          src="src/assets/placeholder.webp"
+          src="https://raw.githubusercontent.com/ZulfiFazhar/RuangTeknoID/refs/heads/main/src/assets/placeholder.webp"
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover"
         />
