@@ -10,6 +10,11 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp"; // Import InputOTP component
 import PropTypes from "prop-types";
 import api from "@/api/api";
 import { useNavigate } from "react-router-dom";
@@ -21,14 +26,15 @@ export function RegisterForm({ className, ...props }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false); // State untuk dialog
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpDialogOpen, setOtpDialogOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
-    // Periksa konfirmasi password
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -44,15 +50,31 @@ export function RegisterForm({ className, ...props }) {
       });
       console.log(response.data);
 
-      // Tampilkan dialog setelah registrasi berhasil
-      setDialogOpen(true);
+      setOtpDialogOpen(true);
     } catch (err) {
-      // Tampilkan pesan error
       setError(
         err.response?.data?.message || "Registration failed. Try again."
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    setError(null);
+
+    try {
+      const response = await api.post("/user/verify-otp", {
+        email,
+        otp: otp,
+      });
+      console.log(response.data);
+      console.log(otp);
+
+      setOtpDialogOpen(false);
+      setDialogOpen(true);
+    } catch (err) {
+      setError(err.response?.data?.message || "Invalid OTP. Please try again.");
     }
   };
 
@@ -120,6 +142,39 @@ export function RegisterForm({ className, ...props }) {
           {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
       </form>
+
+      {/* Dialog untuk memasukkan OTP */}
+      <Dialog open={otpDialogOpen} onOpenChange={setOtpDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Enter OTP</DialogTitle>
+          </DialogHeader>
+          <p>
+            An OTP has been sent to your email. Enter the code below to verify
+            your account.
+          </p>
+          <div className="grid gap-4 mt-4">
+            <Label htmlFor="otp">OTP</Label>
+            <InputOTP maxLength={6} value={otp} onChange={(otp) => setOtp(otp)}>
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+          {console.log(otp)}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          <DialogFooter>
+            <Button onClick={handleVerifyOtp} disabled={loading}>
+              {loading ? "Verifying..." : "Verify OTP"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Dialog untuk konfirmasi berhasil */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
