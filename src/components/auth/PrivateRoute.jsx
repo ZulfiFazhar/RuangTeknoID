@@ -1,49 +1,47 @@
 import PropTypes from "prop-types";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import api from "@/api/api";
+import { useEffect, useState, createContext } from "react";
+
+export const AuthContext = createContext();
 
 const PrivateRoute = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [authStatus, setAuthStatus] = useState(null);
 
   useEffect(() => {
-    const verifyToken = async () => {
+    const validateLogin = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!accessToken || !refreshToken) {
+        setAuthStatus({ authStatus: false });
+        return;
+      }
+
       try {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
-
-        if (accessToken) {
-          // Jika accessToken ada, langsung autentikasi
-          setIsAuthenticated(true);
-        } else if (refreshToken) {
-          // Jika accessToken tidak ada tetapi refreshToken ada
-          const response = await axios.post(
-            `${import.meta.env.VITE_API_URL}/user/refresh-token`,
-            { refreshToken }
-          );
-
-          const { accessToken: newAccessToken } = response.data;
-
-          // Simpan accessToken baru
-          localStorage.setItem("accessToken", newAccessToken);
-          setIsAuthenticated(true);
-        } else {
-          // Tidak ada accessToken dan refreshToken
-          setIsAuthenticated(false);
-        }
+        const response = await api.get("/user/validateLogin", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "x-refresh-token": refreshToken
+          },
+        });
+        setAuthStatus({ authStatus: true, user: response.data.data });
       } catch (error) {
         console.error("Token verification failed:", error);
-        setIsAuthenticated(false);
+        setAuthStatus({authStatus: false});
       }
-    };
+    }
+    
+    validateLogin();
 
-    verifyToken();
   }, []);
 
   // Render hanya jika status autentikasi sudah dipastikan
-  if (isAuthenticated === null) return <div>Loading...</div>;
+  if (authStatus === null) return <div>Loading...</div>;
 
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+  return authStatus.authStatus ? 
+    <AuthContext.Provider value={{authStatus, setAuthStatus}}>{children}</AuthContext.Provider> : 
+    <Navigate to="/login" replace />;
 };
 
 PrivateRoute.propTypes = {
