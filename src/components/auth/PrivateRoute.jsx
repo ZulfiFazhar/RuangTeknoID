@@ -1,6 +1,5 @@
 import PropTypes from "prop-types";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
 import api from "@/api/api";
 import { useEffect, useState, createContext } from "react";
 
@@ -22,26 +21,29 @@ const PrivateRoute = ({ children }) => {
         const response = await api.get("/user/validateLogin", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            "x-refresh-token": refreshToken
+            "x-refresh-token": refreshToken,
           },
         });
         setAuthStatus({ authStatus: true, user: response.data.data });
       } catch (error) {
         console.error("Token verification failed:", error);
-        setAuthStatus({authStatus: false});
+        setAuthStatus({ authStatus: false });
       }
-    }
-    
-    validateLogin();
+    };
 
+    validateLogin();
   }, []);
 
   // Render hanya jika status autentikasi sudah dipastikan
   if (authStatus === null) return <div>Loading...</div>;
 
-  return authStatus.authStatus ? 
-    <AuthContext.Provider value={{authStatus, setAuthStatus}}>{children}</AuthContext.Provider> : 
-    <Navigate to="/login" replace />;
+  return authStatus.authStatus ? (
+    <AuthContext.Provider value={{ authStatus, setAuthStatus }}>
+      {children}
+    </AuthContext.Provider>
+  ) : (
+    <Navigate to="/login" replace />
+  );
 };
 
 PrivateRoute.propTypes = {
