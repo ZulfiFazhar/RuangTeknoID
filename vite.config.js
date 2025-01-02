@@ -8,6 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "editorjs-html": require.resolve("editorjs-html"),
     },
+  },
+  optimizeDeps: {
+    include: ["editorjs-html"],
   },
 });
