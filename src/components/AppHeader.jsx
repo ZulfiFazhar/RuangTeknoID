@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { data } from "@/components/navigation/NavMain";
-// import { LoginButton } from "./auth/LoginButton";
+import { data } from "@/components/navigation/data";
 
 export function AppHeader() {
   const location = useLocation();
@@ -20,6 +19,7 @@ export function AppHeader() {
     const allNavItems = [
       ...data.navAction.flatMap((nav) => nav.items),
       ...data.navMain.flatMap((nav) => nav.items),
+      data.NewPost,
     ];
     return allNavItems.find((item) => item.url === url);
   };
