@@ -24,6 +24,12 @@ const PrivateRoute = ({ children }) => {
             "x-refresh-token": refreshToken,
           },
         });
+
+        // Jika token aktif sudah kadaluwarsa, server akan mengirimkan token akses baru
+        if (response.data.newAccessToken) {
+          localStorage.setItem("accessToken", response.data.newAccessToken);
+        }
+
         setAuthStatus({ authStatus: true, user: response.data.data });
       } catch (error) {
         console.error("Token verification failed:", error);
