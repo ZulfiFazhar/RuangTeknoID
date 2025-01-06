@@ -14,7 +14,6 @@ export function NavIdentity() {
           <Link to="/">
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
               <SquareTerminal className="size-5" />
-              {/* <Command className="size-4" /> */}
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
               <span className="truncate font-semibold">Ruang Teknologi</span>
