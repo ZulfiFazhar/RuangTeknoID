@@ -23,7 +23,6 @@ export function LoginForm({ className, ...props }) {
 
     try {
       const response = await api.post("/user/login", { email, password });
-      console.log(response.data);
 
       // Simpan token di localStorage
       localStorage.setItem("accessToken", response.data.data.accessToken);
@@ -31,6 +30,10 @@ export function LoginForm({ className, ...props }) {
 
       // Redirect ke halaman utama atau dashboard
       navigate("/");
+
+      // Reload page
+      window.location.reload();
+
     } catch (err) {
       // Tampilkan pesan error
       setError(err.response?.data?.message || "Login failed. Try again.");

@@ -6,7 +6,7 @@ import ChatInput from "@/components/chatbot/ChatInput";
 import api from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
-import { AuthContext } from "@/components/auth/PrivateRoute";
+import { AuthContext } from "@/App";
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState([]);
@@ -69,6 +69,14 @@ export default function ChatbotPage() {
       setLoading(false);
     }
   };
+
+  if (!authStatus.authStatus) {
+    return (
+        <div>
+            <h1>Anda harus login terlebih dahulsu untuk menggunakan fitur asisten AI.</h1>
+        </div>
+    )
+  }
 
   return (
     <div className="flex flex-col items-center justify-center h-[88vh]">

@@ -1,12 +1,20 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { SquareTerminal } from "lucide-react";
-import { Link } from "react-router-dom";
 import { LoginForm } from "@/components/auth/login-form";
 import { RegisterForm } from "@/components/auth/register-form";
+import { useContext } from "react";
+import { AuthContext } from "../App";
 
 export default function AuthPage() {
   const location = useLocation(); // Mengambil path dari route
   const isLoginPage = location.pathname === "/login";
+  const { authStatus } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  // Jika sudah login, langsung redirect ke homepage
+  if(authStatus.authStatus) {
+    navigate("/");
+  }
 
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
