@@ -22,16 +22,12 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import api from "@/api/api";
-import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { AuthContext } from "@/components/auth/PrivateRoute";
+import { AuthContext } from "../../App";
 
 export function NavUser() {
   const isMobile = window.innerWidth <= 768;
-  const navigate = useNavigate(); // Hook untuk navigasi halaman
   const { authStatus, setAuthStatus } = useContext(AuthContext);
-
-  console.log(authStatus);
   const handleLogout = async () => {
     try {
       // Kirim request ke endpoint logout
@@ -52,8 +48,8 @@ export function NavUser() {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
 
-      // Arahkan pengguna ke halaman login
-      navigate("/login");
+      // Reload page
+      window.location.reload();
     } catch (error) {
       console.error("Logout failed:", error);
     }
