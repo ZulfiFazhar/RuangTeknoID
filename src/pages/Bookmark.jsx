@@ -1,19 +1,21 @@
-import { useContext } from "react"
-import { AuthContext } from "../App"
+import { useContext, useState } from "react";
+import { AuthContext } from "../components/auth/auth-context";
+import LoginFirst from "../components/auth/login-first";
 
 function Bookmark() {
-    const { authStatus } = useContext(AuthContext)
-    if (!authStatus.authStatus) {
-        return (
-            <div>
-                <h1>Anda harus login terlebih dahulu untuk melihat bookmark.</h1>
-            </div>
-        )
-    }
+  const { authStatus } = useContext(AuthContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
-    <div>Beranda</div>
-  )
+    <div>
+      <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
+      {authStatus.authStatus ? <div>Beranda</div> : null}
+    </div>
+  );
 }
 
-export default Bookmark
+export default Bookmark;
