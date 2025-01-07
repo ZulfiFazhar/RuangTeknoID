@@ -24,8 +24,10 @@ import {
   CommandGroup,
 } from "@/components/ui/command";
 import { data } from "@/components/navigation/data";
+import { AuthContext } from "../auth/auth-context";
 
 export function NavMain() {
+  const { authStatus } = React.useContext(AuthContext);
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -64,7 +66,7 @@ export function NavMain() {
               </SidebarMenuItem>
             )}
 
-            {data.NewPost && (
+            {authStatus.authStatus && data.NewPost && (
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
                   <Link

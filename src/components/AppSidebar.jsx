@@ -1,5 +1,4 @@
 // src/components/AppSidebar.jsx
-
 import {
   Sidebar,
   SidebarContent,
@@ -9,13 +8,13 @@ import {
 import { NavIdentity } from "@/components/navigation/NavIdentity";
 import { NavMain } from "@/components/navigation/NavMain";
 import { NavUser } from "@/components/navigation/NavUser";
-import { useContext } from "react";
-import { AuthContext } from "../App";
-import { useNavigate } from "react-router-dom";
+// import { useContext } from "react";
+// import { AuthContext } from "../components/auth/auth-context";
+// import { Button } from "../components/ui/button";
+// import { Link } from "react-router-dom";
 
 export function AppSidebar() {
-  const { authStatus } = useContext(AuthContext);
-  const navigate = useNavigate();
+  // const { authStatus } = useContext(AuthContext);
 
   return (
     <Sidebar collapsible="icon">
@@ -26,12 +25,7 @@ export function AppSidebar() {
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
-        {authStatus.authStatus ?
-          <NavUser /> :
-          <div className="flex justify-center">
-            <button className="btn-primary" onClick={() => navigate("/login")}>Login</button>
-          </div>
-        }
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
