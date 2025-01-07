@@ -6,7 +6,8 @@ import ChatInput from "@/components/chatbot/ChatInput";
 import api from "@/api/api";
 import { Button } from "@/components/ui/button";
 import { ArrowDown } from "lucide-react";
-import { AuthContext } from "@/App";
+import { AuthContext } from "../components/auth/auth-context";
+import LoginFirst from "../components/auth/login-first";
 
 export default function ChatbotPage() {
   const [messages, setMessages] = useState([]);
@@ -14,6 +15,7 @@ export default function ChatbotPage() {
   const [loading, setLoading] = useState(false);
   const [isScrolledUp, setIsScrolledUp] = useState(false);
   const { authStatus } = useContext(AuthContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -70,61 +72,62 @@ export default function ChatbotPage() {
     }
   };
 
-  if (!authStatus.authStatus) {
-    return (
-        <div>
-            <h1>Anda harus login terlebih dahulsu untuk menggunakan fitur asisten AI.</h1>
-        </div>
-    )
-  }
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[88vh]">
-      {messages.length === 0 && (
-        <h1 className="text-3xl font-semibold text-center mb-10 cursor-default">
-          Hello, {authStatus.user.name.split(" ")[0]}!
-        </h1>
-      )}
-      <div className="w-full max-w-3xl h-fit flex flex-col overflow-hidden relative">
-        <div
-          className="flex-1 overflow-auto p-4"
-          ref={messagesContainerRef}
-          onScroll={handleScroll}
-        >
-          {messages.map((message, index) => (
-            <ChatMessage key={index} message={message} />
-          ))}
-          {loading && <ChatLoading />}
-          <div ref={messagesEndRef} />
-        </div>
+    <div>
+      <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
+      {authStatus.authStatus ? (
+        <div className="flex flex-col items-center justify-center h-[88vh]">
+          {messages.length === 0 && (
+            <h1 className="text-3xl font-semibold text-center mb-10 cursor-default">
+              Hello, {authStatus.user.name.split(" ")[0]}!
+            </h1>
+          )}
+          <div className="w-full max-w-3xl h-fit flex flex-col overflow-hidden relative">
+            <div
+              className="flex-1 overflow-auto p-4"
+              ref={messagesContainerRef}
+              onScroll={handleScroll}
+            >
+              {messages.map((message, index) => (
+                <ChatMessage key={index} message={message} />
+              ))}
+              {loading && <ChatLoading />}
+              <div ref={messagesEndRef} />
+            </div>
 
-        {isScrolledUp && (
-          <Button
-            variant="outline"
-            size="icon"
-            onClick={scrollToBottom}
-            className="absolute left-1/2 -translate-x-1/2 z-10 rounded-full"
-            style={{
-              bottom: `${
-                inputContainerRef.current
-                  ? inputContainerRef.current.offsetHeight + 10
-                  : 60
-              }px`,
-            }}
-          >
-            <ArrowDown />
-          </Button>
-        )}
+            {isScrolledUp && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={scrollToBottom}
+                className="absolute left-1/2 -translate-x-1/2 z-10 rounded-full"
+                style={{
+                  bottom: `${
+                    inputContainerRef.current
+                      ? inputContainerRef.current.offsetHeight + 10
+                      : 60
+                  }px`,
+                }}
+              >
+                <ArrowDown />
+              </Button>
+            )}
 
-        <div ref={inputContainerRef} className="w-full">
-          <ChatInput
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            onSend={fetchResponse}
-            loading={loading}
-          />
+            <div ref={inputContainerRef} className="w-full">
+              <ChatInput
+                inputValue={inputValue}
+                setInputValue={setInputValue}
+                onSend={fetchResponse}
+                loading={loading}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      ) : null}
     </div>
   );
 }
