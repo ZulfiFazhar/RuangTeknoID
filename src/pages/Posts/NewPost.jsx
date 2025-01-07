@@ -40,7 +40,7 @@ function NewPost() {
       const refreshToken = localStorage.getItem("refreshToken");
 
 
-      const newPostId = await api.post("post/create-with-hashtags",
+      const res = await api.post("post/create-with-hashtags",
         newPost,
         {
           headers: {
@@ -48,7 +48,7 @@ function NewPost() {
             "x-refresh-token": refreshToken,
           },
         })
-      if(newPostId.data.status === "success") {
+      if(res.data.status === "success") {
         alert("Postingan berhasil dibuat")
       } else {
         alert("Postingan gagal dibuat")

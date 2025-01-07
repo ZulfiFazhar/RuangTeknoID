@@ -4,7 +4,8 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Bookmark from "./pages/Bookmark";
 import Chatbot from "./pages/Chatbot";
-import Posts from "./pages/Posts";
+import Posts from "./pages/Posts/Posts";
+import Post from "./pages/Posts/Post";
 import NewPosts from "./pages/Posts/NewPost";
 import Threads from "./pages/Threads";
 import Auth from "./pages/Auth";
@@ -68,7 +69,10 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/bookmark" element={<Bookmark />} />
                 <Route path="/chatbot" element={<Chatbot />} />
-                <Route path="/posts" element={<Posts />} />
+                <Route path="/posts">
+                  <Route index element={<Posts />} />
+                  <Route path=":postId" element={<Post />} />
+                </Route>
                 <Route path="/new-post" element={<NewPosts />} />
                 <Route path="/threads" element={<Threads />} />
               </Routes>
