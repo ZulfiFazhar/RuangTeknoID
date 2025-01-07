@@ -1,20 +1,21 @@
-import { useContext } from 'react';
-import { AuthContext } from '../../App';
+import { useContext, useState } from "react";
+import { AuthContext } from "../../components/auth/auth-context";
+import LoginFirst from "../../components/auth/login-first";
 
-function NewPost() {
-    const { authStatus } = useContext(AuthContext);
+function Bookmark() {
+  const { authStatus } = useContext(AuthContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
 
-    if (!authStatus.authStatus) {
-        return (
-            <div>
-                <h1>Anda harus login terlebih dahulu untuk membuat postingan baru.</h1>
-            </div>
-        )
-    }
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   return (
-    <div>New Post Page</div>
-  )
+    <div>
+      <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
+      {authStatus.authStatus ? <div>Beranda</div> : null}
+    </div>
+  );
 }
 
-export default NewPost
+export default Bookmark;

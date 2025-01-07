@@ -3,7 +3,7 @@ import { SquareTerminal } from "lucide-react";
 import { LoginForm } from "@/components/auth/login-form";
 import { RegisterForm } from "@/components/auth/register-form";
 import { useContext } from "react";
-import { AuthContext } from "../App";
+import { AuthContext } from "../components/auth/auth-context";
 
 export default function AuthPage() {
   const location = useLocation(); // Mengambil path dari route
@@ -12,7 +12,7 @@ export default function AuthPage() {
   const navigate = useNavigate();
 
   // Jika sudah login, langsung redirect ke homepage
-  if(authStatus.authStatus) {
+  if (authStatus.authStatus) {
     navigate("/");
   }
 
