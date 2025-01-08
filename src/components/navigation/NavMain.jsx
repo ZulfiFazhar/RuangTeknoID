@@ -15,14 +15,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import {
-  CommandDialog,
-  CommandInput,
-  CommandList,
-  CommandEmpty,
-  CommandItem,
-  CommandGroup,
-} from "@/components/ui/command";
+import { SearchHandling } from "./SearchHandling";
 import { data } from "@/components/navigation/data";
 import { AuthContext } from "../auth/auth-context";
 
@@ -143,17 +136,7 @@ export function NavMain() {
         </Collapsible>
       ))}
 
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="History">
-            <CommandItem>Calendar</CommandItem>
-            <CommandItem>Search Emoji</CommandItem>
-            <CommandItem>Calculator</CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
+      <SearchHandling open={open} onOpenChange={setOpen} />
     </SidebarMenu>
   );
 }

@@ -11,6 +11,7 @@ import {
 export const data = {
   NavSearch: {
     title: "Search",
+    url: "/search",
     icon: Search,
   },
   NewPost: {
