@@ -10,6 +10,8 @@ import NewPosts from "./pages/Posts/NewPost";
 import Threads from "./pages/Threads";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
+import Users from "./pages/Users/Users";
+import User from "./pages/Users/User";
 import { AuthContext } from "./components/auth/auth-context";
 import api from "./api/api";
 import "./App.css";
@@ -74,6 +76,10 @@ function App() {
                   <Route path="/posts">
                     <Route index element={<Posts />} />
                     <Route path=":postId" element={<Post />} />
+                  </Route>
+                  <Route path="/users">
+                    <Route index element={<Users />} />
+                    <Route path=":userId" element={<User />} />
                   </Route>
                   <Route path="/new-post" element={<NewPosts />} />
                   <Route path="/threads" element={<Threads />} />
