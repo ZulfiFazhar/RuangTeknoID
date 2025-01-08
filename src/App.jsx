@@ -10,6 +10,7 @@ import NewPosts from "./pages/Posts/NewPost";
 import Threads from "./pages/Threads";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
+import SearchResult from "./pages/SearchResult";
 import Users from "./pages/Users/Users";
 import User from "./pages/Users/User";
 import { AuthContext } from "./components/auth/auth-context";
@@ -83,6 +84,7 @@ function App() {
                   </Route>
                   <Route path="/new-post" element={<NewPosts />} />
                   <Route path="/threads" element={<Threads />} />
+                  <Route path="/search?*" element={<SearchResult />} />
                 </Routes>
               </MainLayout>
             }
