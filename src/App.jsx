@@ -4,11 +4,14 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Bookmark from "./pages/Bookmark";
 import Chatbot from "./pages/Chatbot";
-import Posts from "./pages/Posts";
+import Posts from "./pages/Posts/Posts";
+import Post from "./pages/Posts/Post";
 import NewPosts from "./pages/Posts/NewPost";
 import Threads from "./pages/Threads";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
+import Users from "./pages/Users/Users";
+import User from "./pages/Users/User";
 import { AuthContext } from "./components/auth/auth-context";
 import api from "./api/api";
 import "./App.css";
@@ -70,7 +73,14 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/bookmark" element={<Bookmark />} />
                   <Route path="/chatbot" element={<Chatbot />} />
-                  <Route path="/posts" element={<Posts />} />
+                  <Route path="/posts">
+                    <Route index element={<Posts />} />
+                    <Route path=":postId" element={<Post />} />
+                  </Route>
+                  <Route path="/users">
+                    <Route index element={<Users />} />
+                    <Route path=":userId" element={<User />} />
+                  </Route>
                   <Route path="/new-post" element={<NewPosts />} />
                   <Route path="/threads" element={<Threads />} />
                 </Routes>
