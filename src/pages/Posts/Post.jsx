@@ -1,23 +1,25 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useContext} from 'react'
 import api from '../../api/api'
 import { useParams, Link } from 'react-router-dom'
+import  { AuthContext } from '../../components/auth/auth-context'
 
 function Post() {
-  const { postId } = useParams()
-  const [post, setPost] = useState(null)
+  const { postId } = useParams();
+  const [post, setPost] = useState(null);
+  const { authStatus } = useContext(AuthContext);
+
   useEffect(() => {
     const getPostDetail = async () => {
       try {
         const res = await api.get(`/post/get-detail/${postId}`)
-        setPost(res.data.data)
+        setPost(res.data.data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
         
     }
     getPostDetail()
   }, [])
-  console.log(post)
 
   if(!post) return <p>Loading...</p>
 
@@ -38,6 +40,13 @@ function Post() {
         {post.hashtags.map((hashtag, index) => (
           <p key={index} className='inline mr-3'>#{hashtag}</p>
         ))}
+
+        <div className='mt-5'></div>
+        {
+          authStatus.user?.userId == post.user.userId &&
+          <Link to={`/posts/edit/${post.post.postId}`} className='underline text-blue-500'>Edit Post</Link>
+        }
+
     </div>
   )
 }

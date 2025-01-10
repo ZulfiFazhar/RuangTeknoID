@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { data } from "@/components/navigation/data";
+import { data, idBehindUrl } from "@/components/navigation/data";
 
 export function AppHeader() {
   const location = useLocation();
@@ -22,7 +22,24 @@ export function AppHeader() {
       data.NavSearch,
       data.NewPost,
     ];
-    return allNavItems.find((item) => item.url === url);
+
+    const regNav = allNavItems.find((item) => item.url === url);
+    if(regNav) {
+      return regNav;
+    }
+
+    // Jika tidak ditemukan, cari di idBehindUrl
+    const unregNav = idBehindUrl.find((item) => {
+      const regex = new RegExp("^\\/" + item.frontUrl + "\\/\\d+$")
+      if(regex.test(url)){
+        return item;
+      }
+    });
+    if(unregNav) {
+      unregNav.url = url;
+      return unregNav;
+    }
+    return null;
   };
 
   const currentPage = findCurrentPage(location.pathname);
