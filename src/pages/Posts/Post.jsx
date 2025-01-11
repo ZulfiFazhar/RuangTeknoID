@@ -15,7 +15,10 @@ function Post() {
       // Increment the post view count
       const incrementViewCount = async () => {
         try {
-          const res = await api.post(`/post/add-view/${postId}`);
+          const userId = authStatus.user?.userId;
+          const res = await api.post(`/post/add-view/${postId}`, {
+            userId
+          });
           if(res.data.status !== "success") {
             alert("Error incrementing view count");
           }
