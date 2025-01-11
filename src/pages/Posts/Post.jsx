@@ -1,18 +1,39 @@
 import {useState, useEffect, useContext} from 'react'
 import api from '../../api/api'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom'
 import  { AuthContext } from '../../components/auth/auth-context'
 
 function Post() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
   const { authStatus } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (location.state?.fromLink) {
+      // Increment the post view count
+      const incrementViewCount = async () => {
+        try {
+          const res = await api.post(`/post/add-view/${postId}`);
+          if(res.data.status !== "success") {
+            alert("Error incrementing view count");
+          }
+        } catch (error) {
+            alert("Error incrementing view count");
+        }
+      };
+      incrementViewCount();
+
+      // Clear state to avoid increasing view count on reload
+      window.history.replaceState({}, document.title, navigate(location.pathname));
+    }
+
+
     const getPostDetail = async () => {
       try {
         const res = await api.get(`/post/get-detail/${postId}`)
-        setPost(res.data.data);
+        setPost(lp => res.data.data);
       } catch (error) {
         console.log(error);
       }

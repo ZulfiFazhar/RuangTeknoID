@@ -78,7 +78,7 @@ function Home() {
                 <div key={post.postId}  className='w-full bg-gray-300 mb-2 p-2 rounded-md'>
                     <h1 className='text-xl font-bold'>{post.title}</h1>
                     <p>{post.content}</p>
-                    <Link to={`/posts/${post.postId}`} className='text-blue-600'>See post details...</Link>
+                    <Link to={`/posts/${post.postId}`} state={{ fromLink : true }} className='text-blue-600'>See post details...</Link>
                     <button className={`block ${post.isBookmarked ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md`} onClick={() => bookmarkPost(post.postId)}>bookmark</button>
                 </div>
             ))
