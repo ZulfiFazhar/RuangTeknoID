@@ -176,21 +176,33 @@ function Home() {
                     <span className='text-lg'>{post.votes}</span>
                     <button onClick={() => handleVote(post.postId, "down", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == -1 ? "bg-gray-400" : "bg-gray-200"}`}>Down Vote</button>
                   </div>
-                  <button className={`block ${comments[post.postId] ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md mt-3`} onClick={() => handleToggleComment(post.postId)}>Show Comments</button>
+                  <button className={`block ${comments[post.postId] ? "bg-gray-400" : "bg-gray-200"} text-xs px-2 py-1 rounded-md mt-3`} onClick={() => handleToggleComment(post.postId)}>
+                    {comments[post.postId] ? "Hide Comments" : "View Comments"}
+                  </button>
                   {
-                    comments[post.postId] && comments[post.postId].map((comment) => (
-                      <div key={comment.commentId} className='ml-5 mt-4'>
-                        <p className='mb-2'><span className='font-bold'>{comment.name}</span> : {comment.content}</p>
-                        <button className={`block ${replies[comment.commentId] ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md`} onClick={() => handleToggleReply(comment.commentId)}>Show Replies</button>
-                        {
-                          replies[comment.commentId] && replies[comment.commentId].map((reply) => (
-                            <div key={reply.commentId} className='ml-5 mt-2'>
-                              <p><span className='font-bold'>{reply.name}</span> : {reply.content}</p>
-                            </div>
-                          ))
-                        }
-                      </div>
-                    ))
+                    comments[post.postId] && 
+                    (comments[post.postId].length > 0 ?
+                      comments[post.postId].map((comment) => (
+                        <div key={comment.commentId} className='ml-5 mt-4 border-t border-black'>
+                          <p className='mb-2'><Link to={`/users/${comment.userId}`} className='text-blue-800 underline font-bold'>@{comment.name}</Link> : {comment.content}</p>
+                          <button className={`block ${replies[comment.commentId] ? "bg-gray-400" : "bg-gray-200"} text-xs px-2 py-1 rounded-md`} onClick={() => handleToggleReply(comment.commentId)}>
+                            {replies[comment.commentId] ? "Hide Replies" : "View Replies"}
+                          </button>
+                          {
+                            replies[comment.commentId] && 
+                            (replies[comment.commentId].length > 0 ?
+                              replies[comment.commentId].map((reply) => (
+                                <div key={reply.commentId} className='ml-5 mt-2 border-t border-black'>
+                                  <p><Link to={`/users/${comment.userId}`} className='text-blue-800 underline font-bold'>@{comment.name}</Link> : {reply.content}</p>
+                                </div>
+                              ))
+                              : <div>There is no reply</div>
+                            )
+                          }
+                        </div>
+                      ))
+                      : <div>There is no comment</div>
+                    )
                   }
               </div>
           ))
