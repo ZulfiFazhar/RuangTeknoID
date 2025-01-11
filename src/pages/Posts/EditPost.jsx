@@ -75,6 +75,28 @@ function EditPost() {
 
   }
 
+  const handleDelete = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    try {
+      const res = await api.delete(`post/delete/${postId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "x-refresh-token": refreshToken,
+        },
+      })
+      if(res.data.status === "success") {
+        alert("Postingan berhasil dihapus");
+        // Redirect to home page
+        navigate('/');
+      } else {
+        alert("Postingan gagal dihapus");
+      }
+    } catch (error) {
+      alert("Error deleting post");
+    }
+  }
 
   return (
     <div>
@@ -102,6 +124,7 @@ function EditPost() {
             </div>
       
             <button onClick={handleSubmit} className='m-2 px-2 py-1 bg-slate-200 rounded-md'>Submit</button>
+            <button onClick={handleDelete} className='m-2 px-2 py-1 bg-red-400 rounded-md'>Delete Post</button>
           </div> 
           : 
           null}
