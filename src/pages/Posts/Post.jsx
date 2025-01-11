@@ -83,7 +83,12 @@ function Post() {
     }
 
     getPostDetail();
-    getUserPost();
+
+    if(authStatus.authStatus) {
+      getUserPost();
+      getComments();
+    }
+    
     getComments();
   }, []);
 
