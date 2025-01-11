@@ -5,6 +5,8 @@ import { AuthContext } from '../components/auth/auth-context'
 
 function Home() {
   const [posts, setPosts] = useState([])
+  const [comments, setComments] = useState({})
+  const [replies, setReplies] = useState({})
   const {authStatus} = useContext(AuthContext)
   useEffect(() => {
     const getPosts = async () => {
@@ -120,22 +122,78 @@ function Home() {
     }
   }
 
+  const handleToggleComment = async (postId) => {
+    // If already open, close it
+    if(comments[postId]) {
+      setComments(prevComments => {
+        const updatedComments = {...prevComments}
+        delete updatedComments[postId]
+        return updatedComments
+      })
+      return;
+    }
+
+    // Get top level comments of this post
+    try {
+      const comments = await api.get(`/comment/get-by-postid/${postId}`);
+      setComments(prevComments => ({...prevComments, [postId]: comments.data.data}));
+    } catch (error) {
+      alert("Error getting comments");
+    }
+  }
+
+  const handleToggleReply = async (commentId) => {
+    // If already open, close it
+    if(replies[commentId]) {
+      setReplies(prevReplies => {
+        const updatedReplies = {...prevReplies}
+        delete updatedReplies[commentId]
+        return updatedReplies
+      })
+      return;
+    }
+
+    // Get replies of this comment
+    try {
+      const replies = await api.get(`/comment/get-replies/${commentId}`);
+      setReplies(prevReplies => ({...prevReplies, [commentId]: replies.data.data}));
+    } catch (error) {
+      alert("Error getting replies");
+    }
+  }
+
   return (
     <div>
         {
-            posts.map((post) => (
-                <div key={post.postId}  className='w-full bg-gray-300 mb-2 p-2 rounded-md'>
-                    <h1 className='text-xl font-bold'>{post.title}</h1>
-                    <p>{post.content}</p>
-                    <Link to={`/posts/${post.postId}`} state={{ fromLink : true }} className='text-blue-600'>See post details...</Link>
-                    <button className={`block ${post.isBookmarked ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md mt-2`} onClick={() => bookmarkPost(post.postId)}>bookmark</button>
-                    <div className='flex w-1/4 mt-3 justify-between items-center'>
-                      <button onClick={() => handleVote(post.postId, "up", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == 1 ? "bg-gray-400" : "bg-gray-200"}`}>Up Vote</button>
-                      <span className='text-lg'>{post.votes}</span>
-                      <button onClick={() => handleVote(post.postId, "down", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == -1 ? "bg-gray-400" : "bg-gray-200"}`}>Down Vote</button>
-                    </div>
-                </div>
-            ))
+          posts.map((post) => (
+              <div key={post.postId}  className='w-full bg-gray-300 mb-2 p-2 rounded-md'>
+                  <h1 className='text-xl font-bold'>{post.title}</h1>
+                  <p>{post.content}</p>
+                  <Link to={`/posts/${post.postId}`} state={{ fromLink : true }} className='text-blue-600'>See post details...</Link>
+                  <button className={`block ${post.isBookmarked ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md mt-2`} onClick={() => bookmarkPost(post.postId)}>bookmark</button>
+                  <div className='flex w-1/4 mt-3 justify-between items-center'>
+                    <button onClick={() => handleVote(post.postId, "up", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == 1 ? "bg-gray-400" : "bg-gray-200"}`}>Up Vote</button>
+                    <span className='text-lg'>{post.votes}</span>
+                    <button onClick={() => handleVote(post.postId, "down", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == -1 ? "bg-gray-400" : "bg-gray-200"}`}>Down Vote</button>
+                  </div>
+                  <button className={`block ${comments[post.postId] ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md mt-3`} onClick={() => handleToggleComment(post.postId)}>Show Comments</button>
+                  {
+                    comments[post.postId] && comments[post.postId].map((comment) => (
+                      <div key={comment.commentId} className='ml-5 mt-4'>
+                        <p className='mb-2'><span className='font-bold'>{comment.name}</span> : {comment.content}</p>
+                        <button className={`block ${replies[comment.commentId] ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md`} onClick={() => handleToggleReply(comment.commentId)}>Show Replies</button>
+                        {
+                          replies[comment.commentId] && replies[comment.commentId].map((reply) => (
+                            <div key={reply.commentId} className='ml-5 mt-2'>
+                              <p><span className='font-bold'>{reply.name}</span> : {reply.content}</p>
+                            </div>
+                          ))
+                        }
+                      </div>
+                    ))
+                  }
+              </div>
+          ))
         }
     </div>
   )
