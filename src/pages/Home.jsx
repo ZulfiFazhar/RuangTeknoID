@@ -171,11 +171,13 @@ function Home() {
                   <p>{post.content}</p>
                   <Link to={`/posts/${post.postId}`} state={{ fromLink : true }} className='text-blue-600'>See post details...</Link>
                   <button className={`block ${post.isBookmarked ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md mt-2`} onClick={() => bookmarkPost(post.postId)}>bookmark</button>
+
                   <div className='flex w-1/4 mt-3 justify-between items-center'>
                     <button onClick={() => handleVote(post.postId, "up", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == 1 ? "bg-gray-400" : "bg-gray-200"}`}>Up Vote</button>
                     <span className='text-lg'>{post.votes}</span>
                     <button onClick={() => handleVote(post.postId, "down", post.userVote)} className={`px-2 py-1 rounded-md ${post.userVote == -1 ? "bg-gray-400" : "bg-gray-200"}`}>Down Vote</button>
                   </div>
+                  
                   <button className={`block ${comments[post.postId] ? "bg-gray-400" : "bg-gray-200"} text-xs px-2 py-1 rounded-md mt-3`} onClick={() => handleToggleComment(post.postId)}>
                     {comments[post.postId] ? "Hide Comments" : "View Comments"}
                   </button>

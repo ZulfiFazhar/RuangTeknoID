@@ -6,6 +6,7 @@ import  { AuthContext } from '../../components/auth/auth-context'
 function Post() {
   const { postId } = useParams();
   const [post, setPost] = useState(null);
+  const [userPost, setUserPost] = useState({});
   const [commentInput, setCommentInput] = useState('');
   const [replyInput, setReplyInput] = useState({});
   const [comments, setComments] = useState({});
@@ -38,13 +39,37 @@ function Post() {
 
 
     const getPostDetail = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
       try {
-        const res = await api.get(`/post/get-detail/${postId}`)
+        const res = await api.get(`/post/get-detail/${postId}`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "x-refresh-token": refreshToken,
+          },
+        })
         setPost(lp => res.data.data);
       } catch (error) {
-        console.log(error);
+        console.log("Error getting post detail");
       }
-        
+    }
+
+    const getUserPost = async () => {
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      try {
+        const res = await api.post(`/post/get-up/${postId}`, {}, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "x-refresh-token": refreshToken,
+          },
+        })
+        setUserPost(prevUserPost => res.data.data);
+      } catch (error) {
+        alert("Error getting user post");
+      }
     }
 
     const getComments = async () => {
@@ -57,9 +82,94 @@ function Post() {
       }
     }
 
-    getPostDetail()
-    getComments()
-  }, [])
+    getPostDetail();
+    getUserPost();
+    getComments();
+  }, []);
+
+  const bookmarkPost = async () => {
+    // Check auth status
+    if (!authStatus.authStatus) {
+      alert("You need to be login to bookmark a post")
+      return
+    }
+
+    const accessToken = localStorage.getItem("accessToken")
+    const refreshToken = localStorage.getItem("refreshToken")
+
+    try {
+      await api.post(`post/toggle-bookmark/${postId}`, {}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "x-refresh-token": refreshToken,
+        },
+      })
+
+      // update userpost state
+      setUserPost(prevUserPost => {
+        const updatedUserPost = {...prevUserPost}
+        updatedUserPost.isBookmarked = !prevUserPost.isBookmarked
+        return updatedUserPost
+      })      
+
+    } catch (error) {
+      alert("Error bookmarking post")
+    }
+
+  }
+
+  const handleVote = async (voteType, curUserVote) => {
+    // Check auth status
+    if (!authStatus.authStatus) {
+      alert("You need to be login to vote")
+      return
+    }
+
+    const accessToken = localStorage.getItem("accessToken")
+    const refreshToken = localStorage.getItem("refreshToken")
+    
+    let vote;
+    let votesIncrement;
+    if(curUserVote == 1) {
+      vote = voteType == "up" ? 0 : -1
+      votesIncrement = voteType == "up" ? -1 : -2 
+    } else if (curUserVote == 0) {
+      vote = voteType == "up" ? 1 : -1
+      votesIncrement = voteType == "up" ? 1 : -1
+    } else if (curUserVote == -1) {
+      vote = voteType == "up" ? 1 : 0
+      votesIncrement = voteType == "up" ? 2 : 1
+    }
+
+    try {
+      await api.post(`post/votes/${postId}`, 
+        { vote }, 
+        {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "x-refresh-token": refreshToken,
+        },
+      })
+
+
+      // update post state
+      setPost(prevPost => {
+        const updatedPost = {...prevPost}
+        updatedPost.post.votes += votesIncrement
+        return updatedPost
+      })
+
+      // update user post state
+      setUserPost(prevUserPost => {
+        const updatedUserPost = {...prevUserPost}
+        updatedUserPost.userVote = vote
+        return updatedUserPost
+      })
+
+    } catch(error) {
+      alert("Error voting")
+    }
+  }
 
   const handleToggleReply = async (commentId) => {
     // If already open, close it
@@ -172,7 +282,6 @@ function Post() {
   };
 
   if(!post) return <p>Loading...</p>
-
   return (
     <div className='w-full '>
         <h1 className='text-xl'>Post Detail</h1>
@@ -190,6 +299,14 @@ function Post() {
         {post.hashtags.map((hashtag, index) => (
           <p key={index} className='inline mr-3'>#{hashtag}</p>
         ))}
+
+        <button className={`block ${userPost.isBookmarked ? "bg-gray-400" : "bg-gray-200"} px-2 py-1 rounded-md mt-2`} onClick={() => bookmarkPost()}>bookmark</button>
+
+        <div className='flex w-1/4 mt-3 justify-between items-center'>
+          <button onClick={() => handleVote("up", userPost.userVote)} className={`px-2 py-1 rounded-md ${userPost.userVote == 1 ? "bg-gray-400" : "bg-gray-200"}`}>Up Vote</button>
+          <span className='text-lg'>{post.post.votes}</span>
+          <button onClick={() => handleVote("down", userPost.userVote)} className={`px-2 py-1 rounded-md ${userPost.userVote == -1 ? "bg-gray-400" : "bg-gray-200"}`}>Down Vote</button>
+        </div>
 
         <div className='mt-5'></div>
         {
