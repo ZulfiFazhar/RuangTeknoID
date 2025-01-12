@@ -18,10 +18,8 @@ import NewPosts from "./pages/Posts/NewPost";
 import EditPost from "./pages/Posts/EditPost";
 
 import { AuthContext } from "./components/auth/auth-context";
-import api from "./api/api";
+import api from "@/api/api";
 import "./App.css";
-
-// export const AuthContext = createContext();
 
 function App() {
   const [authStatus, setAuthStatus] = useState({
@@ -51,15 +49,14 @@ function App() {
         }
 
         setAuthStatus({ authStatus: true, user: response.data.data });
-        // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        // console.error("Token verification failed:", error);
         setAuthStatus({ authStatus: false });
       }
     };
 
     validateLogin();
-  }, []);
+  }, []); // Hanya dijalankan sekali saat komponen dimuat
 
   if (authStatus.authStatus === null) return <div>Loading...</div>;
 
@@ -89,7 +86,7 @@ function App() {
                     <Route path=":userId" element={<User />} />
                   </Route>
                   <Route path="/threads" element={<Threads />} />
-                  <Route path="/search?*" element={<SearchResult />} />
+                  <Route path="/search/*" element={<SearchResult />} />
                 </Routes>
               </MainLayout>
             }

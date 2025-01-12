@@ -20,7 +20,7 @@ export default function ChatMessage({ message }) {
             <Sparkles className="w-5 h-5" />
           </div>
         )}
-        <div className="text-sm leading-relaxed">{message.text}</div>
+        <div className="text-sm leading-relaxed prose">{message.text}</div>
       </div>
     </div>
   );

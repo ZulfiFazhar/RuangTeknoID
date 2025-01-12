@@ -17,7 +17,7 @@ export default function SearchResult() {
       try {
         const response = await api.get("/post/search?keyword=" + searchKeyword);
         setData(response.data); // Menyimpan data hasil API ke state
-        // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
         setError("An error occurred while fetching data."); // Menangani error
       } finally {
