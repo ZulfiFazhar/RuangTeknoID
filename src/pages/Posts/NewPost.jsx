@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from "../../components/auth/auth-context";
 import LoginFirst from "../../components/auth/login-first";
+import { useNavigate } from 'react-router-dom';
 import api from '../../api/api';    
 
-function Bookmark() {
+function NewPost() {
   const [ newPost,  setNewPost] = useState({
     title: '',
     content: '',
@@ -11,6 +12,7 @@ function Bookmark() {
   })
   const [ hashtags, setHashtags] = useState([])
   const { authStatus } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
 
   const handleCloseDialog = () => {
@@ -26,6 +28,7 @@ function Bookmark() {
     getAllHashtag()
   }, [])
 
+  // console.log(newPost)
 
   const handleSubmit = async (e) => {
     // check if title and content is not empty
@@ -48,11 +51,11 @@ function Bookmark() {
       })
     if(res.data.status === "success") {
       alert("Postingan berhasil dibuat")
+      navigate("/")
     } else {
       alert("Postingan gagal dibuat")
     }
   }
-
 
   return (
     <div>
@@ -71,7 +74,7 @@ function Bookmark() {
                   if (e.target.checked) {
                     setNewPost({...newPost, hashtags: [...newPost.hashtags, tag.hashtagId]})
                   } else {
-                    setNewPost({...newPost, hashtags: newPost.hashtags.filter(tag => tag!== e.target.value)})
+                    setNewPost({...newPost, hashtags: newPost.hashtags.filter(ltag => ltag !== tag.hashtagId) })
                   }
                 }} className='outline-2 border-black border bg-gray-100 px-4 py-2 rounded-md mt-4' />
                 <label>#{tag.name}</label>
@@ -87,4 +90,4 @@ function Bookmark() {
   )
 }
 
-export default Bookmark;
+export default NewPost;
