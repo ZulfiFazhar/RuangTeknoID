@@ -81,3 +81,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+.ProseMirror {
+  min-height: 100%;
+}
+
+.ProseMirror-focused {
+  outline: none;
+}

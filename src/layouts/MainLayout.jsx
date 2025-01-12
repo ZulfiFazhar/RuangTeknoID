@@ -2,6 +2,7 @@
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { AppHeader } from "@/components/AppHeader";
+import { Toaster } from "@/components/ui/toaster";
 import PropTypes from "prop-types";
 
 const MainLayout = ({ children }) => {
@@ -13,6 +14,7 @@ const MainLayout = ({ children }) => {
         <main className="flex flex-1 flex-col gap-4 p-4 pt-0 mt-14">
           {children}
         </main>
+        <Toaster />
       </SidebarInset>
     </SidebarProvider>
   );
