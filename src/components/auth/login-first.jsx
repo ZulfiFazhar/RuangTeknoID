@@ -26,5 +26,5 @@ export default function LoginFirst({ isOpen, onClose }) {
 
 LoginFirst.propTypes = {
   isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 };

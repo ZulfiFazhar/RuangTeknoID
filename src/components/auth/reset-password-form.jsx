@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 
 export function ResetPassword({ className, ...props }) {
   const [newPassword, setNewPassword] = useState("");
@@ -97,7 +98,14 @@ export function ResetPassword({ className, ...props }) {
               <p className="text-sm text-red-500 text-center">{error}</p>
             )}
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Resetting..." : "Reset Password"}
+              {loading ? (
+                <>
+                  <Spinner size="small" className="text-white" />
+                  Resetting..
+                </>
+              ) : (
+                "Reset Password"
+              )}
             </Button>
           </div>
           <div className="flex items-center justify-center">

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { data } from "@/components/navigation/data";
+import { data, idBehindUrl } from "@/components/navigation/data";
 
 export function AppHeader() {
   const location = useLocation();
@@ -19,15 +19,33 @@ export function AppHeader() {
     const allNavItems = [
       ...data.navAction.flatMap((nav) => nav.items),
       ...data.navMain.flatMap((nav) => nav.items),
+      data.NavSearch,
       data.NewPost,
     ];
-    return allNavItems.find((item) => item.url === url);
+
+    const regNav = allNavItems.find((item) => item.url === url);
+    if(regNav) {
+      return regNav;
+    }
+
+    // Jika tidak ditemukan, cari di idBehindUrl
+    const unregNav = idBehindUrl.find((item) => {
+      const regex = new RegExp("^\\/" + item.frontUrl + "\\/\\d+$")
+      if(regex.test(url)){
+        return item;
+      }
+    });
+    if(unregNav) {
+      unregNav.url = url;
+      return unregNav;
+    }
+    return null;
   };
 
   const currentPage = findCurrentPage(location.pathname);
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 px-4 justify-between transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+    <header className="flex h-16 shrink-0 items-center gap-2 px-4 justify-between transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 fixed">
       {/* Bagian kiri */}
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-2" />

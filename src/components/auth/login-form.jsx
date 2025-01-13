@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import PropTypes from "prop-types";
 import api from "@/api/api";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +34,6 @@ export function LoginForm({ className, ...props }) {
 
       // Reload page
       window.location.reload();
-
     } catch (err) {
       // Tampilkan pesan error
       setError(err.response?.data?.message || "Login failed. Try again.");
@@ -104,7 +104,14 @@ export function LoginForm({ className, ...props }) {
           />
         </div>
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+          {loading ? (
+            <>
+              <Spinner size="small" className="text-white" />
+              Logging in..
+            </>
+          ) : (
+            "Login"
+          )}
         </Button>
         {error && <p className="text-red-500 text-sm">{error}</p>}
       </div>

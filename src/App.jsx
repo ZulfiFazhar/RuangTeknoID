@@ -4,16 +4,22 @@ import MainLayout from "./layouts/MainLayout";
 import Home from "./pages/Home";
 import Bookmark from "./pages/Bookmark";
 import Chatbot from "./pages/Chatbot";
-import Posts from "./pages/Posts";
-import NewPosts from "./pages/Posts/NewPost";
 import Threads from "./pages/Threads";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
-import { AuthContext } from "./components/auth/auth-context";
-import api from "./api/api";
-import "./App.css";
+import SearchResult from "./pages/SearchResult";
+import Users from "./pages/Users/Users";
+import User from "./pages/Users/User";
 
-// export const AuthContext = createContext();
+// Posts Pages
+import Posts from "./pages/Posts/Posts";
+import Post from "./pages/Posts/Post";
+import NewPosts from "./pages/Posts/NewPost";
+import EditPost from "./pages/Posts/EditPost";
+
+import { AuthContext } from "./components/auth/auth-context";
+import api from "@/api/api";
+import "./App.css";
 
 function App() {
   const [authStatus, setAuthStatus] = useState({
@@ -43,15 +49,14 @@ function App() {
         }
 
         setAuthStatus({ authStatus: true, user: response.data.data });
-        // eslint-disable-next-line no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        // console.error("Token verification failed:", error);
         setAuthStatus({ authStatus: false });
       }
     };
 
     validateLogin();
-  }, []);
+  }, []); // Hanya dijalankan sekali saat komponen dimuat
 
   if (authStatus.authStatus === null) return <div>Loading...</div>;
 
@@ -70,9 +75,18 @@ function App() {
                   <Route path="/" element={<Home />} />
                   <Route path="/bookmark" element={<Bookmark />} />
                   <Route path="/chatbot" element={<Chatbot />} />
-                  <Route path="/posts" element={<Posts />} />
-                  <Route path="/new-post" element={<NewPosts />} />
+                  <Route path="/posts">
+                    <Route index element={<Posts />} />
+                    <Route path=":postId" element={<Post />} />
+                    <Route path="new" element={<NewPosts />} />
+                    <Route path="edit/:postId" element={<EditPost />} />
+                  </Route>
+                  <Route path="/users">
+                    <Route index element={<Users />} />
+                    <Route path=":userId" element={<User />} />
+                  </Route>
                   <Route path="/threads" element={<Threads />} />
+                  <Route path="/search/*" element={<SearchResult />} />
                 </Routes>
               </MainLayout>
             }
