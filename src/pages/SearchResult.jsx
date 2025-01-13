@@ -7,26 +7,25 @@ export default function SearchResult() {
   const params = new URLSearchParams(location.search);
   const searchKeyword = params.get("keyword");
 
-  const [data, setData] = useState(null); // State untuk menyimpan data dari API
-  const [loading, setLoading] = useState(true); // State untuk menunjukkan status loading
-  const [error, setError] = useState(null); // State untuk menangani error
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Mengambil data dari API
     const fetchData = async () => {
       try {
         const response = await api.get("/post/search?keyword=" + searchKeyword);
-        setData(response.data); // Menyimpan data hasil API ke state
+        setData(response.data);
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (err) {
-        setError("An error occurred while fetching data."); // Menangani error
+        setError("Keyword tidak ditemukan");
       } finally {
-        setLoading(false); // Menandakan bahwa loading sudah selesai
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [searchKeyword]); // Dependensi untuk menjalankan ulang jika keyword berubah
+  }, [searchKeyword]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -42,7 +41,6 @@ export default function SearchResult() {
         Result for <span className="text-black">{searchKeyword}</span>
       </h1>
       <pre>{JSON.stringify(data, null, 2)}</pre>{" "}
-      {/* Menampilkan data dalam format JSON */}
     </div>
   );
 }

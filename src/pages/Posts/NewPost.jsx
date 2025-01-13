@@ -9,6 +9,7 @@ import CoverImagePopover from "@/components/editor/CoverImagePopover";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { ToastAction } from "@/components/ui/toast";
+import { Spinner } from "@/components/ui/spinner";
 
 function NewPost() {
   const [newPost, setNewPost] = useState({
@@ -132,7 +133,14 @@ function NewPost() {
             className="w-fit mt-2"
             disabled={isLoading}
           >
-            {isLoading ? "Loading..." : "Publish"}
+            {isLoading ? (
+              <>
+                <Spinner size="small" className="text-white" />
+                Loading..
+              </>
+            ) : (
+              "Publish"
+            )}
           </Button>
         </div>
       ) : null}

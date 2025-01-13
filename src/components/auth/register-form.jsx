@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import PropTypes from "prop-types";
 import api from "@/api/api";
 import { useNavigate } from "react-router-dom";
@@ -112,7 +113,14 @@ export function RegisterForm({ className, ...props }) {
             />
           </div>
           <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Registering..." : "Sign Up"}
+            {loading ? (
+              <>
+                <Spinner size="small" className="text-white" />
+                Registering..
+              </>
+            ) : (
+              "Sign Up"
+            )}
           </Button>
           {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>

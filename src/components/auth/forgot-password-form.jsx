@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import PropTypes from "prop-types";
 import api from "@/api/api";
 
@@ -57,7 +58,14 @@ export function ForgotPasswordForm({ onErrorReset }) {
           />
         </div>
         <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? "Sending..." : "Send Reset Link"}
+          {loading ? (
+            <>
+              <Spinner size="small" className="text-white" />
+              Sending..
+            </>
+          ) : (
+            "Send Reset Link"
+          )}
         </Button>
         {successMessage && (
           <p className="text-green-500 text-sm">{successMessage}</p>
