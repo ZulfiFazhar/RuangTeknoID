@@ -18,7 +18,7 @@ export function AppHeader() {
   const findCurrentPage = (url) => {
     const allNavItems = [
       ...data.navAction.flatMap((nav) => nav.items),
-      ...data.navMain.flatMap((nav) => nav.items),
+      // ...data.navMain.flatMap((nav) => nav.items),
       data.NavSearch,
       data.NewPost,
     ];

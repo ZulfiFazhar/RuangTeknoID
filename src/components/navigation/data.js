@@ -1,5 +1,6 @@
 import {
   Home,
+  Pen,
   Newspaper,
   Sparkles,
   Bookmark,
@@ -29,6 +30,11 @@ export const data = {
           icon: Home,
         },
         {
+          title: "Diskusi",
+          url: "/discussions",
+          icon: Pen,
+        },
+        {
           title: "Penanda",
           url: "/bookmark",
           icon: Bookmark,
@@ -41,23 +47,23 @@ export const data = {
       ],
     },
   ],
-  navMain: [
-    {
-      title: "Komunitas",
-      items: [
-        {
-          title: "Threads",
-          url: "/threads",
-          icon: Newspaper,
-        },
-        {
-          title: "Posts",
-          url: "/posts",
-          icon: ScrollText,
-        },
-      ],
-    },
-  ],
+  // navMain: [
+  //   {
+  //     title: "Komunitas",
+  //     items: [
+  //       {
+  //         title: "Threads",
+  //         url: "/threads",
+  //         icon: Newspaper,
+  //       },
+  //       {
+  //         title: "Posts",
+  //         url: "/posts",
+  //         icon: ScrollText,
+  //       },
+  //     ],
+  //   },
+  // ],
 };
 
 export const idBehindUrl = [

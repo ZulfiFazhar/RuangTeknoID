@@ -98,7 +98,7 @@ export function NavMain() {
         </SidebarGroup>
       ))}
 
-      {data.navMain.map((mainGroup) => (
+      {/* {data.navMain.map((mainGroup) => (
         <Collapsible
           key={mainGroup.title}
           defaultOpen
@@ -134,7 +134,7 @@ export function NavMain() {
             </CollapsibleContent>
           </SidebarGroup>
         </Collapsible>
-      ))}
+      ))} */}
 
       <SearchHandling open={open} onOpenChange={setOpen} />
     </SidebarMenu>

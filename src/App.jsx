@@ -17,6 +17,11 @@ import Post from "./pages/Posts/Post";
 import NewPosts from "./pages/Posts/NewPost";
 import EditPost from "./pages/Posts/EditPost";
 
+// Discussions Pages
+import Discussions from "./pages/Discussions/Discussions";
+import NewDiscussion from "./pages/Discussions/NewDiscussion";
+import Discussion from "./pages/Discussions/Discussion";
+
 import { AuthContext } from "./components/auth/auth-context";
 import api from "@/api/api";
 import "./App.css";
@@ -80,6 +85,11 @@ function App() {
                     <Route path=":postId" element={<Post />} />
                     <Route path="new" element={<NewPosts />} />
                     <Route path="edit/:postId" element={<EditPost />} />
+                  </Route>
+                  <Route path="/discussions">
+                    <Route index element={<Discussions />} />
+                    <Route path="new" element={<NewDiscussion />} />
+                    <Route path=":discussionId" element={<Discussion />} />
                   </Route>
                   <Route path="/users">
                     <Route index element={<Users />} />
