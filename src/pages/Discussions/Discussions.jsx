@@ -40,18 +40,26 @@ function Discussions() {
                 <div key={question.discussionId} className="w-full bg-gray-300 mb-2 p-2 rounded-md">
                     <h1 className="text-xl font-bold">{question.title}</h1>
                     <p>{question.content}</p>
-                    <Link to={`/discussions/${question.discussionId}`} className='text-blue-600 underline'>See discussion detail</Link>
+                    <Link
+                      to={`/discussions/${question.discussionId}`}
+                      state={{ fromLink: true }}
+                      className="text-blue-600"
+                    >
+                      See discussion detail
+                    </Link>
                     <p>views : {question.views}</p>
                     <p>votes : {question.votes}</p>
 
                     <div className="flex w-1/4 mt-3 justify-between items-center">
                       <Link to={`/discussions/${question.discussionId}`}
+                        state={{ fromLink: true }}
                         className={`px-2 py-1 rounded-md border border-black`}
                       >
                         Up Vote
                       </Link>
                       <span className="text-lg">{question.votes}</span>
                       <Link to={`/discussions/${question.discussionId}`}
+                        state={{ fromLink: true }}
                         className={`px-2 py-1 rounded-md border border-black`}
                       >
                         Down Vote
