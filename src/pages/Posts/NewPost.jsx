@@ -53,19 +53,20 @@ function NewPost() {
         },
       });
 
+
       if (res.data.status === "success") {
         toast({
           title: "Berhasil",
           description: "Artikel berhasil di Publish",
           action: (
-            <ToastAction altText="Ke Halaman Artikel" onClick={handleNavigate}>
+            <ToastAction altText="Ke Halaman Artikel" onClick={() => handleNavigate(res.data.data.postId)}>
               Lihat Artikel
             </ToastAction>
           ),
         });
 
         setTimeout(() => {
-          navigate("/");
+          navigate(`/posts/${res.data.data.postId}`);
           window.location.reload();
         }, 2000);
       } else {
@@ -85,8 +86,8 @@ function NewPost() {
     }
   };
 
-  const handleNavigate = () => {
-    navigate("/");
+  const handleNavigate = (newPostId) => {
+    navigate(`/posts/${newPostId}`);
     window.location.reload();
   };
 
