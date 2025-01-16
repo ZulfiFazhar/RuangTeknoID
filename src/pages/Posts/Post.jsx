@@ -266,7 +266,7 @@ function Post() {
 
         // update comments state
         setComments((prevComments) => [
-          { ...res.data.data, name: post.user.name },
+          { ...res.data.data, name: authStatus.user.name },
           ...prevComments,
         ]);
       }
