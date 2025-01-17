@@ -58,14 +58,17 @@ function NewPost() {
           title: "Berhasil",
           description: "Artikel berhasil di Publish",
           action: (
-            <ToastAction altText="Ke Halaman Artikel" onClick={handleNavigate}>
+            <ToastAction
+              altText="Ke Halaman Artikel"
+              onClick={() => handleNavigate(res.data.data.postId)}
+            >
               Lihat Artikel
             </ToastAction>
           ),
         });
 
         setTimeout(() => {
-          navigate("/");
+          navigate(`/posts/${res.data.data.postId}`);
           window.location.reload();
         }, 2000);
       } else {
@@ -85,8 +88,8 @@ function NewPost() {
     }
   };
 
-  const handleNavigate = () => {
-    navigate("/");
+  const handleNavigate = (newPostId) => {
+    navigate(`/posts/${newPostId}`);
     window.location.reload();
   };
 
@@ -94,7 +97,7 @@ function NewPost() {
     <div>
       <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       {authStatus.authStatus ? (
-        <div className="flex flex-col justify-center gap-4 w-3/4 mx-auto">
+        <div className="flex flex-col justify-center gap-4 w-4/5 mx-auto">
           <CoverImagePopover />
           <div>
             <input
@@ -121,7 +124,7 @@ function NewPost() {
             />
           </div>
 
-          <div className="mt-2">
+          <div className="mt-2 overflow-y-auto">
             <ContentEditor
               value={newPost.content}
               onChange={handleContentChange}

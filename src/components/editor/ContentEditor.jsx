@@ -37,7 +37,7 @@ const ContentEditor = ({ value, onChange }) => {
   }
 
   return (
-    <div className="border border-gray-300 rounded-md">
+    <div className="border border-gray-300 rounded-md w-full">
       {/* Toolbar */}
       <div className="flex flex-wrap items-center p-2 border-b bg-gray-50 gap-2">
         {/* Bold */}
@@ -139,9 +139,8 @@ const ContentEditor = ({ value, onChange }) => {
           <SquareCode />
         </Button>
       </div>
-
       {/* Editor */}
-      <EditorContent editor={editor} className="p-4" />
+      <EditorContent editor={editor} className="p-4 overflow-auto" />
     </div>
   );
 };
