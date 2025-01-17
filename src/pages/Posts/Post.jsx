@@ -3,6 +3,24 @@ import { useState, useEffect, useContext } from "react";
 import api from "@/api/api";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "@/components/auth/auth-context";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  ArrowBigUp,
+  ArrowBigDown,
+  Bookmark,
+  Share,
+  MessageCircleMore,
+} from "lucide-react";
+import Feed from "@/pages/Posts/Feed";
+import ContentEditor from "@/components/editor/ContentEditor";
 
 function Post() {
   const { postId } = useParams();
@@ -12,6 +30,7 @@ function Post() {
   const [replyInput, setReplyInput] = useState({});
   const [comments, setComments] = useState({});
   const [replies, setReplies] = useState({});
+  const [showComments, setShowComments] = useState(false);
   const { authStatus } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
@@ -99,6 +118,10 @@ function Post() {
 
     getComments();
   }, []);
+
+  const toggleComments = () => {
+    setShowComments(!showComments);
+  };
 
   const bookmarkPost = async () => {
     // Check auth status
@@ -319,8 +342,130 @@ function Post() {
 
   if (!post) return <p>Loading...</p>;
   return (
-    <div className="w-full ">
-      <h1 className="text-xl">Post Detail</h1>
+    <div>
+      {/* new */}
+      <div className="w-4/5 m-auto grid gap-6 mb-10">
+        <img
+          className="w-full h-80 object-cover rounded-xl mt-2"
+          src="https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="react js"
+        />
+        <div className="flex flex-row items-center gap-4">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col">
+            <p className="font-bold">{post.user.name}</p>
+            <p className="text-xs text-neutral-600">
+              Diposting pada {post.createdAt}
+            </p>
+          </div>
+        </div>
+
+        <h1 className="font-bold text-2xl m-0 p-0">{post.post.title}</h1>
+
+        <div className="flex flex-row flex-wrap gap-2.5">
+          {post.hashtags.map((hashtag, index) => (
+            <Badge
+              key={index}
+              className="w-fit cursor-pointer"
+              variant="outline"
+            >
+              #{hashtag}
+            </Badge>
+          ))}
+        </div>
+
+        <div
+          dangerouslySetInnerHTML={{ __html: post.post.content }}
+          className="text-justify"
+        />
+
+        <div>
+          <TooltipProvider>
+            <div className="flex justify-between items-center w-full">
+              {/* Votes */}
+              <div className="border-2 border-secondary rounded-lg flex text-neutral-600">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button className="m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600">
+                      <ArrowBigUp />{" "}
+                      <span className="pr-1 font-bold ml-0">1</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Upvote</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary">
+                      <ArrowBigDown />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Downvote</TooltipContent>
+                </Tooltip>
+              </div>
+
+              {/* Action */}
+              <div className="flex gap-2 text-neutral-600">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      className={`cursor-pointer flex gap-1 items-center hover:text-amber-600 hover:bg-amber-100 p-2 rounded-lg ${
+                        showComments ? "text-amber-600 bg-amber-100" : ""
+                      }`}
+                      onClick={toggleComments}
+                    >
+                      <MessageCircleMore size={20} />{" "}
+                      <span className="font-bold ml-0">1</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Comment</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg">
+                      <Bookmark
+                        size={20}
+                        className={userPost.isBookmarked ? "fill-current" : ""}
+                        onClick={() => bookmarkPost()}
+                      />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Bookmark</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button className="cursor-pointer hover:text-blue-600 hover:bg-blue-100 p-2 rounded-lg">
+                      <Share size={20} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Share</TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+          </TooltipProvider>
+        </div>
+
+        {showComments && (
+          <div className="grid gap-4">
+            <ContentEditor />
+            <Button onClick={() => handleSendComment(null)} className="w-fit">
+              Send
+            </Button>
+          </div>
+        )}
+
+        <div className="grid gap-4">
+          <h2 className="text-lg font-bold">Artikel Rekomendasi</h2>
+          <Feed />
+        </div>
+      </div>
+
+      {/* old */}
+      {/* <h1 className="text-xl">Post Detail</h1>
       <p>title : {post.post.title}</p>
       <p>content : {post.post.content}</p>
       <p>views : {post.post.views}</p>
@@ -492,7 +637,7 @@ function Post() {
         <div>There is no comment</div>
       )}
 
-      <div className="min-h-screen"></div>
+      <div className="min-h-screen"></div> */}
     </div>
   );
 }

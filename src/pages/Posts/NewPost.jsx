@@ -53,13 +53,15 @@ function NewPost() {
         },
       });
 
-
       if (res.data.status === "success") {
         toast({
           title: "Berhasil",
           description: "Artikel berhasil di Publish",
           action: (
-            <ToastAction altText="Ke Halaman Artikel" onClick={() => handleNavigate(res.data.data.postId)}>
+            <ToastAction
+              altText="Ke Halaman Artikel"
+              onClick={() => handleNavigate(res.data.data.postId)}
+            >
               Lihat Artikel
             </ToastAction>
           ),
@@ -95,7 +97,7 @@ function NewPost() {
     <div>
       <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       {authStatus.authStatus ? (
-        <div className="flex flex-col justify-center gap-4 w-3/4 mx-auto">
+        <div className="flex flex-col justify-center gap-4 w-4/5 mx-auto">
           <CoverImagePopover />
           <div>
             <input
@@ -122,7 +124,7 @@ function NewPost() {
             />
           </div>
 
-          <div className="mt-2">
+          <div className="mt-2 overflow-y-auto">
             <ContentEditor
               value={newPost.content}
               onChange={handleContentChange}
