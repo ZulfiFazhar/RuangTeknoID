@@ -53,14 +53,14 @@ function Discussions() {
                     <div className="flex w-1/4 mt-3 justify-between items-center">
                       <Link to={`/discussions/${question.discussionId}`}
                         state={{ fromLink: true }}
-                        className={`px-2 py-1 rounded-md border border-black`}
+                        className={`px-2 py-1 rounded-md border border-black ${question.userVote === 1 ? "bg-gray-500" : "bg-gray-300"}`}
                       >
                         Up Vote
                       </Link>
                       <span className="text-lg">{question.votes}</span>
                       <Link to={`/discussions/${question.discussionId}`}
                         state={{ fromLink: true }}
-                        className={`px-2 py-1 rounded-md border border-black`}
+                        className={`px-2 py-1 rounded-md border border-black ${question.userVote === -1 ? "bg-gray-500" : "bg-gray-300"}`}
                       >
                         Down Vote
                       </Link>

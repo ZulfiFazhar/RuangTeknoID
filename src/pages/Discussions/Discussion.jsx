@@ -63,11 +63,24 @@ function Discussion() {
     }
 
     const fetchAnswers = async () => {
-      try {
-        const response = await api.get(`/discussion/get-answers-user/${discussionId}`)
+      if(!authStatus.authStatus) {
+        const response = await api.get(`/discussion/get-answers-user/${discussionId}`);
         setAnswers(response.data.data);
-      } catch (error) {
-        console.log(error);
+        return;
+      }else{
+        const accessToken = localStorage.getItem('accessToken');
+        const refreshToken = localStorage.getItem('refreshToken');
+        try {
+          const response = await api.get(`/discussion/get-answers-user-ud/${discussionId}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              'x-refresh-token': refreshToken,
+            }
+          })
+          setAnswers(response.data.data);
+        } catch (error) {
+          console.log(error);
+        }
       }
     }
     
@@ -176,6 +189,58 @@ function Discussion() {
     }
   }
 
+  const handleVoteAnswer = async (voteType, curUserVote, answerId) => {
+    // Check auth status
+    if (!authStatus.authStatus) {
+      alert("You need to be login to vote");
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    let vote;
+    let votesIncrement;
+    if (curUserVote == 1) {
+      vote = voteType == "up" ? 0 : -1;
+      votesIncrement = voteType == "up" ? -1 : -2;
+    } else if (curUserVote == 0) {
+      vote = voteType == "up" ? 1 : -1;
+      votesIncrement = voteType == "up" ? 1 : -1;
+    } else if (curUserVote == -1) {
+      vote = voteType == "up" ? 1 : 0;
+      votesIncrement = voteType == "up" ? 2 : 1;
+    }
+
+    try {
+      const res = await api.put(`discussion/votes/${answerId}`,
+                      { vote },
+                      {
+                        headers: {
+                          Authorization: `Bearer ${accessToken}`,
+                          "x-refresh-token": refreshToken,
+                        },
+                    });
+
+      // update answer state
+      setAnswers((prevAnswers) => {
+        const updatedAnswers = prevAnswers.map((answer) => {
+          if(answer.discussion.discussionId === answerId) {
+            const updatedAnswer = { ...answer };
+            updatedAnswer.discussion.votes += votesIncrement;
+            updatedAnswer.userDiscussion.userVote = vote;
+            return updatedAnswer;
+          }else{
+            return answer;
+          }
+        });
+        return updatedAnswers;
+      });
+
+    } catch (error) {
+      alert("Error voting");
+    }
+  };
 
   if(!question) {
     return <h1>Loading...</h1>
@@ -260,14 +325,30 @@ function Discussion() {
         <div>
           {
             answers.map((answer) => (
-              <div key={answer.discussionId} className="w-full bg-gray-300 mb-2 p-2 rounded-md">
-                <p>UserId : {answer.userId}</p>
-                <p>Username : {answer.name}</p>
-                <p>Content : {answer.content}</p>
-                <p>DiscussionId : {answer.discussionId}</p>
-                <p>Votes : {answer.votes}</p>
-                <p>Created At : {answer.createdAt}</p>
-                <p>Updated At : {answer.updatedAt}</p>
+              <div key={answer.discussion.discussionId} className="w-full bg-gray-300 mb-2 p-2 rounded-md">
+                <p>UserId : {answer.discussion.userId}</p>
+                <p>Username : <Link to={`/users/${answer.author.userId}`} className='text-blue-500 underline'>{answer.author.name}</Link></p>
+                <p>Content : {answer.discussion.content}</p>
+                <p>DiscussionId : {answer.discussion.discussionId}</p>
+                <p>Votes : {answer.discussion.votes}</p>
+                <p>Created At : {answer.discussion.createdAt}</p>
+                <p>Updated At : {answer.discussion.updatedAt}</p>
+
+                <div className="flex w-1/4 mt-3 justify-between items-center">
+                  <button
+                    onClick={() => handleVoteAnswer("up", answer.userDiscussion?.userVote, answer.discussion.discussionId)}
+                    className={`px-2 py-1 rounded-md border border-black ${answer.userDiscussion?.userVote === 1 ? "bg-gray-500" : "bg-gray-300"}`}
+                  >
+                    Up Vote
+                  </button>
+                  <span className="text-lg">{answer.discussion.votes}</span>
+                  <button
+                    onClick={() => handleVoteAnswer("down", answer.userDiscussion?.userVote, answer.discussion.discussionId)}
+                    className={`px-2 py-1 rounded-md border border-black ${answer.userDiscussion?.userVote === -1 ? "bg-gray-500" : "bg-gray-300"}`}
+                  >
+                    Down Vote
+                  </button>
+                </div>
               </div>
             ))
           }
