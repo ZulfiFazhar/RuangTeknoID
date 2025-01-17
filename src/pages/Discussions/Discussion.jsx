@@ -226,11 +226,15 @@ function Discussion() {
             {/* Delete button */}
             {
               question.author.userId === authStatus.user?.userId && 
-            <button
-              onClick={handleDelete}
-              className="bg-red-500 text-white px-2 py-1 rounded-md mt-2"
-            >Delete Discussion
-            </button>
+            <>
+              <Link to={`/discussions/edit/${question.discussion.discussionId}`} className="bg-blue-500 text-white px-2 py-1 rounded-md mt-2 mr-2">Edit Discussion
+              </Link>
+              <button
+                onClick={handleDelete}
+                className="bg-red-500 text-white px-2 py-1 rounded-md mt-2"
+              >Delete Discussion
+              </button>
+            </>
             }
         </div>
 

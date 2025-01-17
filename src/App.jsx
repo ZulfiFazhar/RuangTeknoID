@@ -21,6 +21,7 @@ import EditPost from "./pages/Posts/EditPost";
 import Discussions from "./pages/Discussions/Discussions";
 import NewDiscussion from "./pages/Discussions/NewDiscussion";
 import Discussion from "./pages/Discussions/Discussion";
+import EditDiscussion from "./pages/Discussions/EditDiscussion";
 
 import { AuthContext } from "./components/auth/auth-context";
 import api from "@/api/api";
@@ -90,6 +91,7 @@ function App() {
                     <Route index element={<Discussions />} />
                     <Route path="new" element={<NewDiscussion />} />
                     <Route path=":discussionId" element={<Discussion />} />
+                    <Route path="edit/:discussionId" element={<EditDiscussion />} />
                   </Route>
                   <Route path="/users">
                     <Route index element={<Users />} />
