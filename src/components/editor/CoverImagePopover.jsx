@@ -78,7 +78,7 @@ function CoverImagePopover() {
                 placeholder="Cari gambar..."
                 aria-label="Search Unsplash Images"
               />
-              <div className="grid grid-cols-3 gap-3 max-h-[432px] pr-2 overflow-auto">
+              <div className="grid grid-cols-3 gap-3 max-h-[432px] pr-2 overflow-y-auto">
                 {skeletonItems}
               </div>
             </div>

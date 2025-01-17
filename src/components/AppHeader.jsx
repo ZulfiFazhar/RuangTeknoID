@@ -18,24 +18,24 @@ export function AppHeader() {
   const findCurrentPage = (url) => {
     const allNavItems = [
       ...data.navAction.flatMap((nav) => nav.items),
-      ...data.navMain.flatMap((nav) => nav.items),
+      // ...data.navMain.flatMap((nav) => nav.items),
       data.NavSearch,
       data.NewPost,
     ];
 
     const regNav = allNavItems.find((item) => item.url === url);
-    if(regNav) {
+    if (regNav) {
       return regNav;
     }
 
     // Jika tidak ditemukan, cari di idBehindUrl
     const unregNav = idBehindUrl.find((item) => {
-      const regex = new RegExp("^\\/" + item.frontUrl + "\\/\\d+$")
-      if(regex.test(url)){
+      const regex = new RegExp("^\\/" + item.frontUrl + "\\/\\d+$");
+      if (regex.test(url)) {
         return item;
       }
     });
-    if(unregNav) {
+    if (unregNav) {
       unregNav.url = url;
       return unregNav;
     }
@@ -45,7 +45,7 @@ export function AppHeader() {
   const currentPage = findCurrentPage(location.pathname);
 
   return (
-    <header className="flex h-16 shrink-0 items-center gap-2 px-4 justify-between transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 fixed">
+    <header className="flex h-16 shrink-0 items-center gap-2 px-4 justify-between transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 fixed bg-background w-full z-50">
       {/* Bagian kiri */}
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-2" />
