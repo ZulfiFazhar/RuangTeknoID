@@ -18,10 +18,9 @@ function Discussion() {
       const incrementViewCount = async () => {
         try {
           let userId = null;
-          // if(authStatus.authStatus) {
-          //   console.log("tes")
-          //   userId = authStatus.user.userId;
-          // }
+          if(authStatus.authStatus) {
+            userId = authStatus.user.userId;
+          }
           const res = await api.put(`/discussion/increment-views/${discussionId}`, { userId });
           if (res.data.status !== "success") {
             alert("Error incrementing view count");
@@ -198,6 +197,15 @@ function Discussion() {
             <h1 className="text-xl font-bold mt-2">Author :</h1>
             <p>UserId : {question.author.userId}</p>
             <p>Name : <Link to={`/users/${question.author.userId}`} className="text-blue-500 underline">{question.author.name}</Link></p>
+
+            <h1 className="text-xl font-bold mt-2">Hashtags :</h1>
+            <div className='flex *:mr-2 '>
+              {
+                question.hashtags?.map((hashtag) => (
+                  <p key={hashtag}>#{hashtag}</p>
+                ))
+              }
+            </div>
 
             <div className="flex w-1/4 mt-3 justify-between items-center">
               <button

@@ -9,7 +9,9 @@ function NewDiscussion() {
   const [discussion, setDiscussion] = useState({
     title: "",
     content: "",
+    hashtags: [],
   });
+  const [hashtags, setHashtags] = useState([]);
 
   const { authStatus } = useContext(AuthContext);
   const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
@@ -19,6 +21,16 @@ function NewDiscussion() {
   };
 
   useEffect(() => {
+    const getAllHashtag = async () => {
+      try {
+        const hashtags = await api.get("hashtag/get");
+        setHashtags(hashtags.data.data);
+      } catch (error) {
+        alert("Error getting hashtags data");
+      }
+    };
+
+    getAllHashtag();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -33,7 +45,7 @@ function NewDiscussion() {
 
 
     try {
-        const res = await api.post("discussion/create", discussion, {
+        const res = await api.post("discussion/create-hashtags", discussion, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
                 "x-refresh-token": refreshToken,
@@ -46,6 +58,8 @@ function NewDiscussion() {
         alert("Error creating new discussion");
     }
   };
+
+  console.log(discussion);
 
   return (
     <div>
@@ -65,6 +79,35 @@ function NewDiscussion() {
             onChange={(e) => setDiscussion({ ...discussion, content: e.target.value })}
             className="outline-2 border-black border w-full bg-gray-100 px-4 py-2 rounded-md mb-4"
           />
+
+          <p>hashtags</p>
+          <div className="">
+            {hashtags.map((tag) => (
+              <div key={tag.hashtagId} className=" ">
+                <input
+                  type="checkbox"
+                  checked={discussion.hashtags.includes(tag.hashtagId)}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setDiscussion((prevDis) => ({
+                        ...prevDis,
+                        hashtags: [...prevDis.hashtags, tag.hashtagId],
+                      }));
+                    } else {
+                      setDiscussion((prevDis) => ({
+                        ...prevDis,
+                        hashtags: prevDis.hashtags.filter(
+                          (ht) => ht !== tag.hashtagId
+                        ),
+                      }));
+                    }
+                  }}
+                  className="outline-2 border-black border bg-gray-100 px-4 py-2 rounded-md mt-4"
+                />
+                <label>#{tag.name}</label>
+              </div>
+            ))}
+          </div>
 
           <button
             onClick={handleSubmit}
