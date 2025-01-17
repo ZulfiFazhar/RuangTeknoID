@@ -242,6 +242,38 @@ function Discussion() {
     }
   };
 
+  const handleDeleteAnswer = async (answerId) => {
+    if(!authStatus.authStatus) {
+      alert('You must login first');
+      return
+    }
+    
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    try {
+      const res = await api.delete(`/discussion/delete/${answerId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'x-refresh-token': refreshToken,
+        }
+      });
+
+      if(res.data.status === 'success') {
+        alert("Answer deleted successfully");
+
+        // Update answers state
+        setAnswers((prevAnswers) => {
+          return prevAnswers.filter((answer) => answer.discussion.discussionId !== answerId);
+        });
+      }else{
+        alert('Error deleting answer');
+      }
+    } catch (error) {
+      alert('Error deleting answer');
+    }
+  }
+
+
   if(!question) {
     return <h1>Loading...</h1>
   }
@@ -349,6 +381,17 @@ function Discussion() {
                     Down Vote
                   </button>
                 </div>
+
+                {
+                  answer.author.userId === authStatus.user?.userId && 
+                <>
+                  <button
+                    onClick={() => handleDeleteAnswer(answer.discussion.discussionId)}
+                    className="bg-red-500 text-white px-2 py-1 rounded-md mt-2"
+                  >Delete Answer
+                  </button>
+                </>
+                }
               </div>
             ))
           }
