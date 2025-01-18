@@ -4,7 +4,7 @@ import LoginFirst from "@/components/auth/login-first";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "@/api/api";
 
-function NewDiscussion() {
+function EditDiscussion() {
   const navigate = useNavigate();
   const [discussion, setDiscussion] = useState({
     title: "",
@@ -12,7 +12,7 @@ function NewDiscussion() {
     hashtags: [],
   });
   const [hashtags, setHashtags] = useState([]);
-
+  const { discussionId } = useParams();
   const { authStatus } = useContext(AuthContext);
   const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
 
@@ -30,10 +30,26 @@ function NewDiscussion() {
       }
     };
 
+    const getDiscussion = async () => {
+        try {
+            const res = await api.get(`discussion/get-hashtags/${discussionId}`);
+            setDiscussion(prevDis => {
+              const newDis = { title  : res.data.data.title, content: res.data.data.content, hashtags: [] };
+              if(res.data.data.hashtags) {
+                newDis.hashtags = res.data.data.hashtags.split(',').map(Number);
+              }
+              return newDis;
+            });
+        } catch (error) {
+            alert("Error getting discussion data");
+        }
+    };
+
     getAllHashtag();
+    getDiscussion();
   }, []);
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     // check if title and content is not empty
     if (discussion.title.length === 0 || discussion.content.length === 0) {
       alert("Title dan content tidak boleh kosong");
@@ -45,7 +61,7 @@ function NewDiscussion() {
 
 
     try {
-        const res = await api.post("discussion/create-hashtags", discussion, {
+        const res = await api.put(`discussion/update/${discussionId}`, discussion, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
                 "x-refresh-token": refreshToken,
@@ -53,13 +69,11 @@ function NewDiscussion() {
         });
 
         alert("Discussion created successfully");
-        navigate(`/discussions/${res.data.data.discussionId}`);
+        navigate(`/discussions/${discussionId}`);
     } catch (error) {
         alert("Error creating new discussion");
     }
   };
-
-  console.log(discussion);
 
   return (
     <div>
@@ -110,7 +124,7 @@ function NewDiscussion() {
           </div>
 
           <button
-            onClick={handleSubmit}
+            onClick={handleUpdate}
             className="m-2 px-2 py-1 bg-slate-200 rounded-md"
           >
             Submit
@@ -121,4 +135,4 @@ function NewDiscussion() {
   );
 }
 
-export default NewDiscussion;
+export default EditDiscussion;
