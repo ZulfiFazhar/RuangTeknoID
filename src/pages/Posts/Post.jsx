@@ -465,7 +465,7 @@ function Post() {
       </div>
 
       {/* old */}
-      {/* <h1 className="text-xl">Post Detail</h1>
+      <h1 className="text-xl">Post Detail</h1>
       <p>title : {post.post.title}</p>
       <p>content : {post.post.content}</p>
       <p>views : {post.post.views}</p>
@@ -637,7 +637,7 @@ function Post() {
         <div>There is no comment</div>
       )}
 
-      <div className="min-h-screen"></div> */}
+      <div className="min-h-screen"></div>
     </div>
   );
 }
