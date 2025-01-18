@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import {
   TooltipProvider,
   Tooltip,
@@ -11,112 +13,99 @@ import {
   ArrowBigDown,
   Bookmark,
   MessageCircleMore,
+  Divide,
 } from "lucide-react";
 import api from "@/api/api";
+
+const MOCK_COMMENTS = [
+  {
+    id: 1,
+    recipient: "Asep Hasanudin",
+    text: "wow, react js sangat bagus sekali",
+    avatar: "https://github.com/shadcn.png",
+    time: "1 jam lalu",
+  },
+  {
+    id: 2,
+    recipient: "Nike Ardila",
+    text: "Keren sekali",
+    avatar: "https://github.com/shadcn.png",
+    time: "2 jam lalu",
+  },
+  {
+    id: 3,
+    recipient: "Indah Permata Sari",
+    text: "Menurut saya, react js itu sangat menyenangkan",
+    avatar: "https://github.com/shadcn.png",
+    time: "58 menit lalu",
+  },
+  {
+    id: 4,
+    recipient: "Purwita Sari",
+    text: "Wow wow wow, JavaScript sangat bagus sekali",
+    avatar: "https://github.com/shadcn.png",
+    time: "4 menit lalu",
+  },
+];
 
 function User() {
   const { userId } = useParams();
   const [user, setUser] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [showComments, setShowComments] = useState(false);
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await api.get(`user/users/${userId}`);
-        setUser(res.data.data);
-      } catch (error) {
-        console.error(error);
-        alert("User not found");
-      }
-    };
-    getUser();
+    fetchUserData();
   }, [userId]);
 
-  if (!user) {
-    return <p>Loading...</p>;
-  }
-
-  const truncateText = (text, maxLength) => {
-    if (text.length <= maxLength) return text;
-    return `${text.substring(0, maxLength)}...`;
+  const fetchUserData = async () => {
+    try {
+      const response = await api.get(`user/users/${userId}`);
+      setUser(response.data.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      alert("User not found");
+    }
   };
 
   const toggleComments = () => setShowComments(!showComments);
 
-  const content =
-    "JavaScript adalah salah satu bahasa pemrograman paling populer untuk membuat website interaktif. Dengan JavaScript, kita dapat membuat berbagai interaksi menarik yang membuat pengalaman pengguna lebih baik.";
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  if (!user) {
+    return <div className="p-4 text-center">Loading...</div>;
+  }
 
   return (
-    <div className="container mx-auto px-4 py-6 flex flex-col md:flex-row gap-8">
-      {/* Article Section */}
-      <img
-        className="w-full h-40 object-cover rounded-xl mb-4"
-        src="https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        alt="JavaScript interaction illustration"
-      />
-      <h2 className="text-xl font-bold mb-2">Ini Komentar</h2>
-      <p className="text-neutral-600 mb-4">{truncateText(content, 150)}</p>
+    <div className="mx-auto mt-6 space-y-6">
+      <div className="space-y-4">
+        {MOCK_COMMENTS.map((comment) => (
+          <UserComment key={comment.id} user={user} comment={comment} />
+        ))}
+      </div>
+    </div>
+  );
+}
 
-      <div className="flex items-center gap-4 mb-6">
-        <p className="text-sm text-neutral-600">
-          {new Date().toLocaleDateString()}
-        </p>
+function UserComment({ user, comment }) {
+  if (!comment) return null;
+
+  return (
+    <div className="flex gap-4">
+      <Avatar className="w-10 h-10">
+        <AvatarImage src={comment.avatar} alt={`@${user.name}`} />
+        <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          {/* Voting */}
-          <div className="border rounded-lg flex text-neutral-600">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <button className="p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600">
-                    <ArrowBigUp /> <span className="pr-1 font-bold">1</span>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Upvote</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <button className="p-2 rounded-r-lg hover:bg-rose-100 hover:text-rose-600">
-                    <ArrowBigDown />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Downvote</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
+          <p className="font-bold">{user.name}</p>
+          <span className="text-gray-500">→</span>
+          <p className="font-bold">{comment.recipient}</p>
         </div>
-
-        {/* Actions */}
-        <div className="flex gap-2 text-neutral-600 ml-auto">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <button
-                  className={`flex gap-1 items-center hover:text-amber-600 hover:bg-amber-100 p-2 rounded-lg ${
-                    showComments ? "text-amber-600 bg-amber-100" : ""
-                  }`}
-                  onClick={toggleComments}
-                >
-                  <MessageCircleMore size={20} />{" "}
-                  <span className="font-bold">4</span>
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Comment</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <button className="hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg">
-                  <Bookmark size={20} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>Bookmark</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
+        <p className="text-xs text-neutral-600">{comment.time}</p>
+        <p className="mt-1">{comment.text}</p>
       </div>
     </div>
   );
