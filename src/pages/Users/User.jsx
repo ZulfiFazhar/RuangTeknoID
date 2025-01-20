@@ -63,7 +63,7 @@ function User() {
       {/* Sidebar */}
       <div className="w-full lg:w-80 border-l-2 pl-6">
         <div className="mb-6 flex flex-col items-start">
-          <Avatar className="w-24 h-24 mb-2">
+          <Avatar className="w-24 h-24 mb-4">
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
