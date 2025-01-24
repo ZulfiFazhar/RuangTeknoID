@@ -350,17 +350,22 @@ function Post() {
           src="https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt="react js"
         />
-        <div className="flex flex-row items-center gap-4">
-          <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <p className="font-bold">{post.user.name}</p>
-            <p className="text-xs text-neutral-600">
-              Diposting pada {post.createdAt}
-            </p>
-          </div>
+        <div>
+          <Link
+            to={`/users/${post.user.userId}`}
+            className="flex flex-row items-center gap-4"
+          >
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="font-bold">{post.user.name}</p>
+              <p className="text-xs text-neutral-600">
+                Diposting pada {post.createdAt}
+              </p>
+            </div>
+          </Link>
         </div>
 
         <h1 className="font-bold text-2xl m-0 p-0">{post.post.title}</h1>
@@ -379,7 +384,7 @@ function Post() {
 
         <div
           dangerouslySetInnerHTML={{ __html: post.post.content }}
-          className="text-justify"
+          className="text-justify grid gap-2"
         />
 
         <div>
@@ -389,17 +394,41 @@ function Post() {
               <div className="border-2 border-secondary rounded-lg flex text-neutral-600">
                 <Tooltip>
                   <TooltipTrigger>
-                    <button className="m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600">
-                      <ArrowBigUp />{" "}
-                      <span className="pr-1 font-bold ml-0">1</span>
+                    <button
+                      onClick={() => handleVote("up", userPost.userVote)}
+                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 `}
+                    >
+                      <ArrowBigUp
+                        className={`${
+                          userPost.userVote == 1
+                            ? "fill-emerald-600 text-emerald-600"
+                            : ""
+                        }`}
+                      />{" "}
+                      <span
+                        className={`pr-1 font-bold ml-0 ${
+                          userPost.userVote == 1 ? "text-emerald-600" : ""
+                        }`}
+                      >
+                        {post.post.votes}
+                      </span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Upvote</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger>
-                    <button className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary">
-                      <ArrowBigDown />
+                    <button
+                      className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary"
+                      onClick={() => handleVote("down", userPost.userVote)}
+                    >
+                      <ArrowBigDown
+                        className={
+                          userPost.userVote == -1
+                            ? "fill-rose-600 text-rose-600"
+                            : ""
+                        }
+                      />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Downvote</TooltipContent>
@@ -425,11 +454,17 @@ function Post() {
 
                 <Tooltip>
                   <TooltipTrigger>
-                    <button className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg">
+                    <button
+                      className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg"
+                      onClick={() => bookmarkPost()}
+                    >
                       <Bookmark
                         size={20}
-                        className={userPost.isBookmarked ? "fill-current" : ""}
-                        onClick={() => bookmarkPost()}
+                        className={
+                          userPost.isBookmarked
+                            ? "fill-fuchsia-600 text-fuchsia-600"
+                            : ""
+                        }
                       />
                     </button>
                   </TooltipTrigger>
@@ -465,7 +500,7 @@ function Post() {
       </div>
 
       {/* old */}
-      {/* <h1 className="text-xl">Post Detail</h1>
+      <h1 className="text-xl">Post Detail</h1>
       <p>title : {post.post.title}</p>
       <p>content : {post.post.content}</p>
       <p>views : {post.post.views}</p>
@@ -637,7 +672,7 @@ function Post() {
         <div>There is no comment</div>
       )}
 
-      <div className="min-h-screen"></div> */}
+      <div className="min-h-screen"></div>
     </div>
   );
 }
