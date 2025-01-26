@@ -1,3 +1,4 @@
+import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import MainLayout from "./layouts/MainLayout";
@@ -10,6 +11,7 @@ import ResetPassword from "./pages/ResetPassword";
 import SearchResult from "./pages/SearchResult";
 import Users from "./pages/Users/Users";
 import User from "./pages/Users/User";
+import LoadingPage from "@/components/ui/loading-page";
 
 // Posts Pages
 import Posts from "./pages/Posts/Posts";
@@ -64,11 +66,11 @@ function App() {
     validateLogin();
   }, []); // Hanya dijalankan sekali saat komponen dimuat
 
-  if (authStatus.authStatus === null) return <div>Loading...</div>;
+  if (authStatus.authStatus === null) return <LoadingPage />;
 
   return (
     <AuthContext.Provider value={{ authStatus, setAuthStatus }}>
-      <Router>
+      <Router basename="/">
         <Routes>
           <Route path="/login" element={<Auth />} />
           <Route path="/register" element={<Auth />} />
@@ -91,7 +93,10 @@ function App() {
                     <Route index element={<Discussions />} />
                     <Route path="new" element={<NewDiscussion />} />
                     <Route path=":discussionId" element={<Discussion />} />
-                    <Route path="edit/:discussionId" element={<EditDiscussion />} />
+                    <Route
+                      path="edit/:discussionId"
+                      element={<EditDiscussion />}
+                    />
                   </Route>
                   <Route path="/users">
                     <Route index element={<Users />} />
