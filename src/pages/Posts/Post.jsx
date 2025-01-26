@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import Feed from "@/pages/Posts/Feed";
 import ContentEditor from "@/components/editor/ContentEditor";
+import LoadingPage from "@/components/ui/loading-page";
 
 function Post() {
   const { postId } = useParams();
@@ -340,7 +341,7 @@ function Post() {
     }
   };
 
-  if (!post) return <p>Loading...</p>;
+  if (!post) return <LoadingPage />;
   return (
     <div>
       {/* new */}

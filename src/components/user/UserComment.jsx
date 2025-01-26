@@ -16,6 +16,7 @@ import {
   Divide,
 } from "lucide-react";
 import api from "@/api/api";
+import LoadingPage from "@/components/ui/loading-page";
 
 const MOCK_COMMENTS = [
   {
@@ -75,7 +76,7 @@ function User() {
   };
 
   if (!user) {
-    return <div className="p-4 text-center">Loading...</div>;
+    return <LoadingPage />;
   }
 
   return (

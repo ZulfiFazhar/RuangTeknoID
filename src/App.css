@@ -82,6 +82,42 @@
   }
 }
 
+.custom-loader {
+  width: 80px;
+  height: 80px;
+  color: #262626;
+  position: relative;
+  background: linear-gradient(currentColor 0 0) center/100% 20px,
+    linear-gradient(currentColor 0 0) center/20px 100%;
+  background-repeat: no-repeat;
+}
+.custom-loader:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(currentColor 0 0) 0 0,
+    linear-gradient(currentColor 0 0) 100% 0,
+    linear-gradient(currentColor 0 0) 0 100%,
+    linear-gradient(currentColor 0 0) 100% 100%;
+  background-size: 31px 31px;
+  background-repeat: no-repeat;
+  animation: sp6 1.5s infinite cubic-bezier(0.3, 1, 0, 1);
+}
+@keyframes sp6 {
+  33% {
+    inset: -20px;
+    transform: rotate(0deg);
+  }
+  66% {
+    inset: -20px;
+    transform: rotate(90deg);
+  }
+  100% {
+    inset: 0;
+    transform: rotate(90deg);
+  }
+}
+
 .ProseMirror {
   min-height: 100%;
 }

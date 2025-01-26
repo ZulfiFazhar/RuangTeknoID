@@ -5,6 +5,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import api from "@/api/api";
 import UserPost from "@/components/user/UserPost";
 import UserComment from "@/components/user/UserComment";
+import LoadingPage from "@/components/ui/loading-page";
 
 function User() {
   const { userId } = useParams();
@@ -25,7 +26,7 @@ function User() {
   }, [userId]);
 
   if (!user) {
-    return <p>Loading...</p>;
+    return <LoadingPage />;
   }
 
   const handlePageChange = (page) => {

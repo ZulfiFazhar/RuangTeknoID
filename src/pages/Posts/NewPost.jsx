@@ -17,11 +17,16 @@ function NewPost() {
     content: "",
     hashtags: [],
   });
+  const [coverImage, setCoverImage] = useState("");
   const navigate = useNavigate();
   const { authStatus } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
   const { toast } = useToast();
+
+  const handleImageSelected = (imageUrl) => {
+    setCoverImage(imageUrl);
+  };
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
@@ -98,7 +103,16 @@ function NewPost() {
       <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       {authStatus.authStatus ? (
         <div className="flex flex-col justify-center gap-4 w-4/5 mx-auto">
-          <CoverImagePopover />
+          <CoverImagePopover onImageSelected={handleImageSelected} />
+          {coverImage && (
+            <div>
+              <img
+                className="w-full h-80 object-cover rounded-xl mt-2"
+                src={coverImage}
+                alt="Preview"
+              />
+            </div>
+          )}
           <div>
             <input
               type="text"
