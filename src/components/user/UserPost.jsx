@@ -15,6 +15,7 @@ import {
   MessageCircleMore,
 } from "lucide-react";
 import api from "@/api/api";
+import LoadingPage from "@/components/ui/loading-page";
 
 function User() {
   const { userId } = useParams();
@@ -36,7 +37,7 @@ function User() {
   }, [userId]);
 
   if (!user) {
-    return <p>Loading...</p>;
+    return <LoadingPage />;
   }
 
   const truncateText = (text, maxLength) => {

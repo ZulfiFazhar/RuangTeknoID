@@ -4,6 +4,7 @@ import { AuthContext } from "@/components/auth/auth-context";
 import LoginFirst from "@/components/auth/login-first";
 import api from "@/api/api";
 import { Link } from "react-router-dom";
+import CardPost from "@/components/post/CardPost";
 
 function Bookmark() {
   const [posts, setPosts] = useState([]);
@@ -81,8 +82,11 @@ function Bookmark() {
     <div>
       <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       {authStatus.authStatus ? (
-        <div>
+        <div className="w-4/5 mt-2 m-auto grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
+            <CardPost key={post.id} post={post} />
+          ))}
+          {/* {posts.map((post) => (
             <div
               key={post.postId}
               className="w-full bg-gray-300 mb-2 p-2 rounded-md"
@@ -101,7 +105,7 @@ function Bookmark() {
                 bookmark
               </button>
             </div>
-          ))}
+          ))} */}
         </div>
       ) : null}
     </div>

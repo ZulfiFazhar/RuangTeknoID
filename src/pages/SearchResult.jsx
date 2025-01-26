@@ -1,6 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "@/api/api";
+import LoadingPage from "@/components/ui/loading-page";
 
 export default function SearchResult() {
   const location = useLocation();
@@ -28,7 +29,7 @@ export default function SearchResult() {
   }, [searchKeyword]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingPage />;
   }
 
   if (error) {

@@ -1,7 +1,6 @@
 // src/components/NavMain.jsx
 import React from "react";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -10,11 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
 import { SearchHandling } from "./SearchHandling";
 import { data } from "@/components/navigation/data";
 import { AuthContext } from "../auth/auth-context";

@@ -3,6 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import Feed from "@/pages/Posts/Feed";
 import Test from "@/pages/Posts/test";
+import LoadingPage from "@/components/ui/loading-page";
 
 function Home() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,7 +48,7 @@ function Home() {
       <div className="w-4/5 m-auto mt-4">
         {currentPage === 1 && <Feed />}
         {currentPage === 2 && <Test />}
-        {currentPage === 3 && <div>For You 3</div>}
+        {currentPage === 3 && <LoadingPage />}
         {currentPage === 4 && <div>For You 4</div>}
       </div>
     </div>
