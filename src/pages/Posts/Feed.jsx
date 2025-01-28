@@ -5,7 +5,7 @@ import api from "@/api/api";
 import { AuthContext } from "@/components/auth/auth-context";
 import CardPost from "@/components/post/CardPost";
 
-function Home({ type = "all" }) {
+function Home({type = "all"}) {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState({});
   const [replies, setReplies] = useState({});
@@ -21,15 +21,14 @@ function Home({ type = "all" }) {
           const accessToken = localStorage.getItem("accessToken");
           const refreshToken = localStorage.getItem("refreshToken");
 
-          if (type === "bookmark") {
+          if (type === "bookmark"){
             const res = await api.get("post/get-bookmarked", {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
               },
             });
-
             setPosts(res.data.data);
-            return;
+            return
           }
 
           const res = await api.get("post/recommedations", {
@@ -192,12 +191,7 @@ function Home({ type = "all" }) {
     <div>
       <div className="m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {posts.map((post) => (
-          <CardPost
-            key={post.postId}
-            post={post}
-            bookmarkPost={bookmarkPost}
-            handleVote={handleVote}
-          />
+          <CardPost key={post.postId} post={post} bookmarkPost={bookmarkPost} handleVote={handleVote} />
         ))}
       </div>
 
