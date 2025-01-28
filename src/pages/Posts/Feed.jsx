@@ -5,7 +5,7 @@ import api from "@/api/api";
 import { AuthContext } from "@/components/auth/auth-context";
 import CardPost from "@/components/post/CardPost";
 
-function Home() {
+function Home({type = "all"}) {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState({});
   const [replies, setReplies] = useState({});
@@ -15,10 +15,22 @@ function Home() {
     const getPosts = async () => {
       try {
         if (!authStatus.authStatus) {
-          const res = await api.get("post/get");
+          const res = await api.get("post/get-detail-unauthenticated");
           setPosts(res.data.data);
         } else {
           const accessToken = localStorage.getItem("accessToken");
+          const refreshToken = localStorage.getItem("refreshToken");
+
+          if (type === "bookmark"){
+            const res = await api.get("post/get-bookmarked", {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+  
+            setPosts(res.data.data);
+            return
+          }
 
           const res = await api.get("post/recommedations", {
             headers: {
@@ -128,57 +140,59 @@ function Home() {
     }
   };
 
-  const handleToggleComment = async (postId) => {
-    // If already open, close it
-    if (comments[postId]) {
-      setComments((prevComments) => {
-        const updatedComments = { ...prevComments };
-        delete updatedComments[postId];
-        return updatedComments;
-      });
-      return;
-    }
+  // console.log(posts)
 
-    // Get top level comments of this post
-    try {
-      const comments = await api.get(`/comment/get-by-postid/${postId}`);
-      setComments((prevComments) => ({
-        ...prevComments,
-        [postId]: comments.data.data,
-      }));
-    } catch (error) {
-      alert("Error getting comments");
-    }
-  };
+  // const handleToggleComment = async (postId) => {
+  //   // If already open, close it
+  //   if (comments[postId]) {
+  //     setComments((prevComments) => {
+  //       const updatedComments = { ...prevComments };
+  //       delete updatedComments[postId];
+  //       return updatedComments;
+  //     });
+  //     return;
+  //   }
 
-  const handleToggleReply = async (commentId) => {
-    // If already open, close it
-    if (replies[commentId]) {
-      setReplies((prevReplies) => {
-        const updatedReplies = { ...prevReplies };
-        delete updatedReplies[commentId];
-        return updatedReplies;
-      });
-      return;
-    }
+  //   // Get top level comments of this post
+  //   try {
+  //     const comments = await api.get(`/comment/get-by-postid/${postId}`);
+  //     setComments((prevComments) => ({
+  //       ...prevComments,
+  //       [postId]: comments.data.data,
+  //     }));
+  //   } catch (error) {
+  //     alert("Error getting comments");
+  //   }
+  // };
 
-    // Get replies of this comment
-    try {
-      const replies = await api.get(`/comment/get-replies/${commentId}`);
-      setReplies((prevReplies) => ({
-        ...prevReplies,
-        [commentId]: replies.data.data,
-      }));
-    } catch (error) {
-      alert("Error getting replies");
-    }
-  };
+  // const handleToggleReply = async (commentId) => {
+  //   // If already open, close it
+  //   if (replies[commentId]) {
+  //     setReplies((prevReplies) => {
+  //       const updatedReplies = { ...prevReplies };
+  //       delete updatedReplies[commentId];
+  //       return updatedReplies;
+  //     });
+  //     return;
+  //   }
+
+  //   // Get replies of this comment
+  //   try {
+  //     const replies = await api.get(`/comment/get-replies/${commentId}`);
+  //     setReplies((prevReplies) => ({
+  //       ...prevReplies,
+  //       [commentId]: replies.data.data,
+  //     }));
+  //   } catch (error) {
+  //     alert("Error getting replies");
+  //   }
+  // };
 
   return (
     <div>
       <div className="m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {posts.map((post) => (
-          <CardPost key={post.id} post={post} bookmarkPost={bookmarkPost} />
+          <CardPost key={post.postId} post={post} bookmarkPost={bookmarkPost} handleVote={handleVote} />
         ))}
       </div>
 
