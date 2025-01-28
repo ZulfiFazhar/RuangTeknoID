@@ -24,8 +24,9 @@ import {
   Share,
   MessageCircleMore,
 } from "lucide-react";
+import Posts from "../../pages/Posts/Posts";
 
-export default function CardPost({ post, bookmarkPost }) {
+export default function CardPost({ post, bookmarkPost, handleVote }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -39,6 +40,15 @@ export default function CardPost({ post, bookmarkPost }) {
   const handleBookmarkClick = (event) => {
     event.stopPropagation();
     bookmarkPost(post.postId);
+  };
+
+  const handleUpVoteClick = (event) => {
+    event.stopPropagation();
+    handleVote(post.postId, "up", post.userVote);
+  };
+  const handleDownVoteClick = (event) => {
+    event.stopPropagation();
+    handleVote(post.postId, "down", post.userVote);
   };
 
   return (
@@ -85,10 +95,10 @@ export default function CardPost({ post, bookmarkPost }) {
                 <TooltipTrigger>
                   <button
                     className="m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600"
-                    onClick={handleButtonClick}
+                    onClick={handleUpVoteClick}
                   >
                     <ArrowBigUp />{" "}
-                    <span className="pr-1 font-bold ml-0">1</span>
+                    <span className="pr-1 font-bold ml-0">{post.votes}</span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Upvote</TooltipContent>
@@ -97,7 +107,7 @@ export default function CardPost({ post, bookmarkPost }) {
                 <TooltipTrigger>
                   <button
                     className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary"
-                    onClick={handleButtonClick}
+                    onClick={handleDownVoteClick}
                   >
                     <ArrowBigDown />
                   </button>
