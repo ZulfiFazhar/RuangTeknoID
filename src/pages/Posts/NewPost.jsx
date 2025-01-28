@@ -14,6 +14,7 @@ import { Spinner } from "@/components/ui/spinner";
 function NewPost() {
   const [newPost, setNewPost] = useState({
     title: "",
+    image_cover: "",
     content: "",
     hashtags: [],
   });
@@ -26,6 +27,7 @@ function NewPost() {
 
   const handleImageSelected = (imageUrl) => {
     setCoverImage(imageUrl);
+    setNewPost({ ...newPost, image_cover: imageUrl });
   };
 
   const handleCloseDialog = () => {

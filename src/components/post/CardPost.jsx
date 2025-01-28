@@ -24,6 +24,7 @@ import {
   Share,
   MessageCircleMore,
 } from "lucide-react";
+import Posts from "../../pages/Posts/Posts";
 
 export default function CardPost({ post, bookmarkPost, handleVote }) {
   const navigate = useNavigate();
@@ -40,6 +41,15 @@ export default function CardPost({ post, bookmarkPost, handleVote }) {
   const handleBookmarkClick = (event) => {
     event.stopPropagation();
     bookmarkPost(post.postId);    
+  };
+
+  const handleUpVoteClick = (event) => {
+    event.stopPropagation();
+    handleVote(post.postId, "up", post.userVote);
+  };
+  const handleDownVoteClick = (event) => {
+    event.stopPropagation();
+    handleVote(post.postId, "down", post.userVote);
   };
 
   return (

@@ -27,7 +27,6 @@ function Home({type = "all"}) {
                 Authorization: `Bearer ${accessToken}`,
               },
             });
-  
             setPosts(res.data.data);
             return
           }

@@ -1,23 +1,49 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import SimpleMDE from "react-simplemde-editor";
+import "easymde/dist/easymde.min.css";
+import PropTypes from "prop-types";
 
-const HomeRedirect = () => {
-  const navigate = useNavigate();
+const MarkdownEditor = ({ value, onChange }) => {
+  const [markdownValue, setMarkdownValue] = useState(value || "");
 
-  const handleClick = () => {
-    navigate("/discussions");
+  const handleEditorChange = (value) => {
+    setMarkdownValue(value);
+    onChange(value); // Mengembalikan output markdown
   };
 
   return (
-    <div className="bg-green-300 w-full">
-      <div className="w-4/5 grid grid-cols-3 gap-2 bg-rose-200 justify-center m-auto">
-        <div className="bg-black">asd</div>
-        <div className="bg-black">asd</div>
-        <div className="bg-black">asd</div>
-        <div className="bg-black">asd</div>
-      </div>
+    <div className="border border-gray-300 rounded-md w-full">
+      <SimpleMDE
+        value={markdownValue}
+        // onChange={handleEditorChange}
+        options={{
+          spellChecker: false,
+          toolbar: [
+            "bold",
+            "italic",
+            "heading",
+            "|",
+            "quote",
+            "unordered-list",
+            "ordered-list",
+            "|",
+            "link",
+            "image",
+            "code",
+            "clean-block",
+            "|",
+            "preview",
+          ],
+          placeholder: "Mulai menulis...",
+        }}
+      />
     </div>
   );
 };
 
-export default HomeRedirect;
+MarkdownEditor.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
+};
+
+export default MarkdownEditor;

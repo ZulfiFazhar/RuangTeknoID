@@ -95,6 +95,7 @@ function Post() {
           }
         );
         setUserPost((prevUserPost) => res.data.data);
+        console.log("User post: ", userPost);
       } catch (error) {
         alert("Error getting user post");
       }
@@ -340,7 +341,7 @@ function Post() {
       alert("Error deleting comment");
     }
   };
-
+  console.log("Post data: " + JSON.stringify(post));
   if (!post) return <LoadingPage />;
   return (
     <div>
@@ -348,9 +349,13 @@ function Post() {
       <div className="w-4/5 m-auto grid gap-6 mb-10">
         <img
           className="w-full h-80 object-cover rounded-xl mt-2"
-          src="https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src={
+            post.post.image_cover ||
+            `https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`
+          }
           alt="react js"
         />
+
         <div>
           <Link
             to={`/users/${post.user.userId}`}
@@ -363,7 +368,7 @@ function Post() {
             <div className="flex flex-col">
               <p className="font-bold">{post.user.name}</p>
               <p className="text-xs text-neutral-600">
-                Diposting pada {post.createdAt}
+                Diposting pada {post.post.createdAt}
               </p>
             </div>
           </Link>
