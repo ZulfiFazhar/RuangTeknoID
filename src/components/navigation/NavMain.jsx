@@ -66,6 +66,20 @@ export function NavMain() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             )}
+
+            {authStatus.authStatus && data.AskQuestion && (
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link
+                    to={data.AskQuestion.url}
+                    className="flex items-center gap-2 border hover:border-2 hover:border-black bg-black text-white font-semibold px-2 py-1"
+                  >
+                    <data.AskQuestion.icon width={16} />
+                    <span>{data.AskQuestion.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            )}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
