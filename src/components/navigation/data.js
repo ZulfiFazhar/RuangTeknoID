@@ -1,12 +1,13 @@
 import {
   Home,
   Pen,
-  Newspaper,
+  // Newspaper,
   Sparkles,
   Bookmark,
-  ScrollText,
+  // ScrollText,
   Search,
   CircleFadingPlus,
+  MessageSquareDiff,
 } from "lucide-react";
 
 export const data = {
@@ -19,6 +20,11 @@ export const data = {
     title: "New Post",
     url: "/posts/new",
     icon: CircleFadingPlus,
+  },
+  AskQuestion: {
+    title: "Ask Question",
+    url: "/discussions/new",
+    icon: MessageSquareDiff,
   },
   navAction: [
     {
@@ -80,7 +86,7 @@ export const idBehindUrl = [
     frontUrl: "posts/edit",
   },
   {
-    title : "User",
-    frontUrl: "users"
-  }
-]
+    title: "User",
+    frontUrl: "users",
+  },
+];
