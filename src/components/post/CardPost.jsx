@@ -52,7 +52,7 @@ export default function CardPost({ post, bookmarkPost, handleVote }) {
     >
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage src={post.profile_image_url} alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">

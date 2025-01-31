@@ -61,8 +61,7 @@ function User() {
         {/* Article Section */}
         <div className="flex items-center gap-4 mb-4">
           <Avatar>
-            {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
-            <img src={user.profile_image_url} alt="" />
+            <AvatarImage src={user.profile_image_url} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <p className="font-bold">{user.name}</p> {/* nama pembuat artikel */}
