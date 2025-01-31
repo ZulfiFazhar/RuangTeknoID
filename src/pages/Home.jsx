@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Feed from "@/pages/Posts/Feed";
 import Test from "@/pages/Posts/test";
 import LoadingPage from "@/components/ui/loading-page";
+import UserProfile from "@/pages/Users/UserProfile";
 
 function Home() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,7 +50,7 @@ function Home() {
         {currentPage === 1 && <Feed />}
         {currentPage === 2 && <Test />}
         {currentPage === 3 && <LoadingPage />}
-        {currentPage === 4 && <div>For You 4</div>}
+        {currentPage === 4 && <UserProfile />}
       </div>
     </div>
   );
