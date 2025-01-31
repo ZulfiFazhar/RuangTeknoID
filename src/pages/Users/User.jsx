@@ -65,7 +65,8 @@ function User() {
       <div className="w-full lg:w-80 border-l-2 pl-6">
         <div className="mb-6 flex flex-col items-start">
           <Avatar className="w-24 h-24 mb-4">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
+            <img src={user.profile_image_url} alt="" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <h2 className="text-lg font-bold">{user.name}</h2>
