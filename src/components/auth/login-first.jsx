@@ -16,9 +16,9 @@ export default function LoginFirst({ isOpen, onClose }) {
           <DialogTitle>Login First</DialogTitle>
         </DialogHeader>
         <p>Anda harus login terlebih dahulu untuk mengakses halaman ini.</p>
-        <Button>
-          <Link to="/login">Login</Link>
-        </Button>
+        <Link to="/login">
+          <Button>Login</Button>
+        </Link>
       </DialogContent>
     </Dialog>
   );
