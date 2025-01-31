@@ -4,6 +4,7 @@ import {
   // Newspaper,
   Sparkles,
   Bookmark,
+  User,
   // ScrollText,
   Search,
   CircleFadingPlus,
@@ -49,6 +50,12 @@ export const data = {
           title: "Asisten AI",
           url: "/chatbot",
           icon: Sparkles,
+        },
+        // Link profile setting sementara
+        {
+          title: "Update Profile",
+          url: "/users/update-profile",
+          icon: User,
         },
       ],
     },
