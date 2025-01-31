@@ -19,6 +19,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowBigUp,
   ArrowBigDown,
@@ -29,8 +30,11 @@ import {
   MoreVertical,
   ChevronUp,
   ChevronDown,
+  Sparkles,
 } from "lucide-react";
 import formatDate from "@/lib/formatDate";
+import ReactMarkdown from "react-markdown";
+import MarkdownComponent from "@/components/ui/markdown-component";
 
 function Discussion() {
   const [question, setQuestion] = useState(null);
@@ -40,6 +44,11 @@ function Discussion() {
   const navigate = useNavigate();
   const { discussionId } = useParams();
   const { authStatus } = useContext(AuthContext);
+  const [botAnswer, setBotAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
     if (location.state?.fromLink) {
@@ -79,9 +88,6 @@ function Discussion() {
           );
           setQuestion(response.data.data);
         } else {
-          const accessToken = localStorage.getItem("accessToken");
-          const refreshToken = localStorage.getItem("refreshToken");
-
           const response = await api.get(
             `/discussion/get-discussion-ud-author/${discussionId}`,
             {
@@ -107,8 +113,6 @@ function Discussion() {
         setAnswers(response.data.data);
         return;
       } else {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
         try {
           const response = await api.get(
             `/discussion/get-answers-user-ud/${discussionId}`,
@@ -135,9 +139,6 @@ function Discussion() {
       alert("You must login first");
       return;
     }
-
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
 
     try {
       const response = await api.post(
@@ -323,19 +324,62 @@ function Discussion() {
     }
   };
 
+  const handleBotAnswer = async () => {
+    console.log("AI Answer Clicked");
+    setLoading(true);
+    try {
+      const res = await api.post("/gemini/answer-text", {
+        question:
+          "Pertanyaan: " +
+          question.discussion.title +
+          ". Detail: " +
+          question.discussion.content,
+      });
+      const answer = res.data.data.answer;
+      setBotAnswer(answer);
+
+      try {
+        const response = await api.post(
+          "/discussion/create-bot-answer", // Endpoint baru untuk menyimpan jawaban bot
+          {
+            answerTo: question.discussion.discussionId,
+            content: answer,
+          }
+        );
+
+        // Reset answer input state
+        setAnswerInput("");
+
+        // Update answers state
+        setAnswers((prevAnswers) => {
+          return [response.data.data.newAnswer, ...prevAnswers];
+        });
+      } catch (error) {
+        console.log("Error adding bot answer:", error);
+      }
+    } catch (error) {
+      console.log("Error generating bot answer:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Updated botAnswer", botAnswer);
+  }, [botAnswer]);
+
+  console.log("Answer", answers);
+
   if (!question) {
     return <LoadingPage />;
   }
-
-  console.log("Data Question Discussion: ", question);
-  console.log("Data Answers Discussion: ", answers);
 
   return (
     <div className="w-4/5 m-auto h-full mt-4">
       {/* new */}
       <div className="grid gap-2">
         {/* haashtag */}
-        <div className="">
+        <div className="flex gap-2">
           {question.hashtags.map((hashtag, index) => (
             <Badge key={index} className="w-fit rounded-full py-1 px-3">
               #{hashtag}
@@ -345,7 +389,10 @@ function Discussion() {
 
         {/* title */}
         <div className="">
-          <h1 className="font-bold text-3xl">{question.discussion.title}</h1>
+          <MarkdownComponent
+            content={question.discussion.title}
+            className="text-3xl font-bold"
+          />
         </div>
 
         {/* user info */}
@@ -368,10 +415,7 @@ function Discussion() {
         </div>
 
         {/* content */}
-        <div
-          dangerouslySetInnerHTML={{ __html: question.discussion.content }}
-          className="text-lg my-4"
-        />
+        <MarkdownComponent content={question.discussion.content} />
 
         {/* action */}
         <div>
@@ -448,7 +492,7 @@ function Discussion() {
 
         {/* input for answering the question */}
         <div className="flex items-center gap-2 mt-4">
-          <input
+          <textarea
             value={answerInput}
             onChange={(e) => setAnswerInput(e.target.value)}
             type="text"
@@ -459,7 +503,24 @@ function Discussion() {
         </div>
 
         {/*  Jawaban */}
-        <div className="mt-4">
+        <div className="grid gap-2">
+          {/* AI Answer Button */}
+          <div className="flex flex-col justify-start items-start">
+            {loading ? (
+              <Spinner animation="border" role="status">
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            ) : (
+              <Button
+                variant="link"
+                onClick={handleBotAnswer}
+                className="m-0 p-0"
+              >
+                <Sparkles />
+                Answer with AI
+              </Button>
+            )}
+          </div>
           {answers.map((answer) => (
             <div key={answer.discussion.discussionId} className="">
               <div className="flex flex-row items-start gap-3">
@@ -505,11 +566,9 @@ function Discussion() {
                       </DropdownMenu>
                     )}
                   </div>
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: answer.discussion.content,
-                    }}
-                  />
+                  <div>
+                    <MarkdownComponent content={answer.discussion.content} />
+                  </div>
                 </div>
               </div>
             </div>

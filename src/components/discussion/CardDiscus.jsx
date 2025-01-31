@@ -26,11 +26,18 @@ import {
   MessageCircleMore,
 } from "lucide-react";
 import formatDate from "@/lib/formatDate";
+import MarkdownComponent from "@/components/ui/markdown-component";
 
 export default function CardDiscus({ question }) {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/discussions/${question.discussionId}`);
+  };
+  const truncateText = (text, maxLength) => {
+    if (text.length <= maxLength) {
+      return text;
+    }
+    return text.substring(0, maxLength) + "...";
   };
 
   return (
@@ -50,8 +57,11 @@ export default function CardDiscus({ question }) {
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold">{question.title}</h1>
-        <p>{question.content}</p>
+        <MarkdownComponent
+          content={question.title}
+          className="text-2xl font-bold"
+        />
+        <MarkdownComponent content={truncateText(question.content, 200)} />
         <div className="flex flex-row flex-wrap gap-1">
           <Badge variant="outline">#python</Badge>
         </div>
