@@ -9,8 +9,6 @@ import Threads from "./pages/Threads";
 import Auth from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
 import SearchResult from "./pages/SearchResult";
-import Users from "./pages/Users/Users";
-import User from "./pages/Users/User";
 import LoadingPage from "@/components/ui/loading-page";
 
 // Posts Pages
@@ -24,6 +22,11 @@ import Discussions from "./pages/Discussions/Discussions";
 import NewDiscussion from "./pages/Discussions/NewDiscussion";
 import Discussion from "./pages/Discussions/Discussion";
 import EditDiscussion from "./pages/Discussions/EditDiscussion";
+
+// Users Pages
+import Users from "./pages/Users/Users";
+import User from "./pages/Users/User";
+import UpdateProfile from "./pages/Users/UpdateProfile";
 
 import { AuthContext } from "./components/auth/auth-context";
 import api from "@/api/api";
@@ -100,6 +103,7 @@ function App() {
                   </Route>
                   <Route path="/users">
                     <Route index element={<Users />} />
+                    <Route path="update-profile" element={<UpdateProfile />} />
                     <Route path=":userId" element={<User />} />
                   </Route>
                   <Route path="/threads" element={<Threads />} />

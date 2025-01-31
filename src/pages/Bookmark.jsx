@@ -2,9 +2,9 @@
 import { useContext, useState, useEffect } from "react";
 import { AuthContext } from "@/components/auth/auth-context";
 import LoginFirst from "@/components/auth/login-first";
-import api from "@/api/api";
+// import api from "@/api/api";
 import { Link, useNavigate } from "react-router-dom";
-import CardPost from "@/components/post/CardPost";
+// import CardPost from "@/components/post/CardPost";
 import Feed from "@/pages/Posts/Feed";
 
 // function Bookmark() {

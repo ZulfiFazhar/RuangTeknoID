@@ -106,6 +106,9 @@ function Home({ type = "all" }) {
     } else if (curUserVote == -1) {
       vote = voteType == "up" ? 1 : 0;
       votesIncrement = voteType == "up" ? 2 : 1;
+    } else {
+      vote = voteType == "up" ? 1 : -1;
+      votesIncrement = voteType == "up" ? 1 : -1;
     }
 
     try {
