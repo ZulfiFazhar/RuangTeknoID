@@ -73,16 +73,8 @@ function Post() {
     }
 
     const getPostDetail = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-      const refreshToken = localStorage.getItem("refreshToken");
-
       try {
-        const res = await api.get(`/post/get-detail/${postId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "x-refresh-token": refreshToken,
-          },
-        });
+        const res = await api.get(`/post/get-detail/${postId}`);
         setPost((lp) => res.data.data);
       } catch (error) {
         console.log("Error getting post detail");
@@ -125,7 +117,7 @@ function Post() {
 
     if (authStatus.authStatus) {
       getUserPost();
-      getComments();
+      // getComments();
     }
 
     getComments();
@@ -375,7 +367,7 @@ function Post() {
             className="flex flex-row items-center gap-4"
           >
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={post.user.profile_image_url} alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
@@ -550,7 +542,7 @@ function Post() {
                     <Link to={`/users/${comment.userId}`}>
                       <Avatar className="w-9 h-9">
                         <AvatarImage
-                          src="https://github.com/shadcn.png"
+                          src={comment.profile_image_url}
                           alt="@shadcn"
                         />
                         <AvatarFallback>CN</AvatarFallback>
@@ -641,7 +633,7 @@ function Post() {
                               <Link to={`/users/${comment.userId}`}>
                                 <Avatar className="w-9 h-9">
                                   <AvatarImage
-                                    src="https://github.com/shadcn.png"
+                                    src={comment.profile_image_url}
                                     alt="@shadcn"
                                   />
                                   <AvatarFallback>CN</AvatarFallback>
