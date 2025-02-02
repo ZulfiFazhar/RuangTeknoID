@@ -4,7 +4,7 @@ import {
   // Newspaper,
   Sparkles,
   Bookmark,
-  User,
+  // User,
   // ScrollText,
   Search,
   CircleFadingPlus,
@@ -52,11 +52,11 @@ export const data = {
           icon: Sparkles,
         },
         // Link profile setting sementara
-        {
-          title: "Update Profile",
-          url: "/users/update-profile",
-          icon: User,
-        },
+        // {
+        //   title: "Update Profile",
+        //   url: "/users/update-profile",
+        //   icon: User,
+        // },
       ],
     },
   ],

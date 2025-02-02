@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -20,7 +21,7 @@ function handleEditProfile() {}
 
 function UserProfile() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 w-4/5 m-auto">
       <Button
         variant="link"
         onClick={handleEditProfile}
