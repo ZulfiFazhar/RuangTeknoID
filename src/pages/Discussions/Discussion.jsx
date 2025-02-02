@@ -375,7 +375,7 @@ function Discussion() {
   }
 
   return (
-    <div className="w-4/5 m-auto h-full mt-4">
+    <div className="w-4/5 m-auto h-full mt-4 pb-10">
       {/* new */}
       <div className="grid gap-2">
         {/* haashtag */}
@@ -577,7 +577,7 @@ function Discussion() {
       </div>
 
       {/* old */}
-      <div className="w-full bg-gray-300 mb-2 p-2 rounded-md">
+      {/* <div className="w-full bg-gray-300 mb-2 p-2 rounded-md">
         <h1 className="text-xl font-bold">Question :</h1>
         <p>Title : {question.discussion.title}</p>
         <p>Content : {question.discussion.content}</p>
@@ -631,10 +631,10 @@ function Discussion() {
           >
             Down Vote
           </button>
-        </div>
+        </div> */}
 
-        {/* Delete button */}
-        {question.author.userId === authStatus.user?.userId && (
+      {/* Delete button */}
+      {/* {question.author.userId === authStatus.user?.userId && (
           <>
             <Link
               to={`/discussions/edit/${question.discussion.discussionId}`}
@@ -649,11 +649,11 @@ function Discussion() {
               Delete Discussion
             </button>
           </>
-        )}
-      </div>
+        )} */}
+      {/* </div> */}
 
       {/* input for answering the question */}
-      <div className="flex items-center">
+      {/* <div className="flex items-center">
         <input
           value={answerInput}
           onChange={(e) => setAnswerInput(e.target.value)}
@@ -667,10 +667,10 @@ function Discussion() {
         >
           Send
         </button>
-      </div>
+      </div> */}
 
       {/* Answers section */}
-      <div>
+      {/* <div>
         {answers.map((answer) => (
           <div
             key={answer.discussion.discussionId}
@@ -742,7 +742,7 @@ function Discussion() {
             )}
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }
