@@ -10,7 +10,7 @@ const MarkdownComponent = ({ content, className }) => {
   }, []);
 
   return (
-    <div className={`markdown text-justify grid gap-1 mt-2 ${className}`}>
+    <div className={`markdown text-justify grid gap-1 ${className}`}>
       <ReactMarkdown>{content}</ReactMarkdown>
     </div>
   );
