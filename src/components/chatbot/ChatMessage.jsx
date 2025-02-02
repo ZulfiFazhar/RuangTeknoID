@@ -1,5 +1,6 @@
 import { Sparkles } from "lucide-react";
 import PropTypes from "prop-types";
+import MarkdownComponent from "@/components/ui/markdown-component";
 
 export default function ChatMessage({ message }) {
   return (
@@ -20,7 +21,11 @@ export default function ChatMessage({ message }) {
             <Sparkles className="w-5 h-5" />
           </div>
         )}
-        <div className="text-sm leading-relaxed prose">{message.text}</div>
+        {/* <div className="text-sm leading-relaxed prose">{message.text}</div> */}
+        <MarkdownComponent
+          content={message.text}
+          className="text-sm leading-relaxed mt-0"
+        />
       </div>
     </div>
   );

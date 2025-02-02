@@ -3,7 +3,7 @@ import { AuthContext } from "@/components/auth/auth-context";
 import LoginFirst from "@/components/auth/login-first";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/api";
-import ContentEditor from "@/components/editor/ContentEditor";
+import ContentEditor from "@/components/editor/ContentEditor2";
 import HashtagEditor from "@/components/editor/HashtagEditor";
 import CoverImagePopover from "@/components/editor/CoverImagePopover";
 import { useToast } from "@/hooks/use-toast";
@@ -12,6 +12,7 @@ import { ToastAction } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
 
 function NewPost() {
+  const navigate = useNavigate();
   const [newPost, setNewPost] = useState({
     title: "",
     image_cover: "",
@@ -19,7 +20,6 @@ function NewPost() {
     hashtags: [],
   });
   const [coverImage, setCoverImage] = useState("");
-  const navigate = useNavigate();
   const { authStatus } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
@@ -36,6 +36,7 @@ function NewPost() {
 
   const handleContentChange = (content) => {
     setNewPost({ ...newPost, content });
+    console.log("Content Updated:", content);
   };
 
   const handleSubmit = async () => {
@@ -122,7 +123,7 @@ function NewPost() {
               onChange={(e) =>
                 setNewPost({ ...newPost, title: e.target.value })
               }
-              className="rounded-md text-4xl outline-none text-black font-bold placeholder-neutral-800 w-full h-full"
+              className="rounded-md text-3xl outline-none text-black font-bold placeholder-neutral-800 w-full h-full"
               placeholder="Tulis Judul Artikel Disini.."
               required
             />
@@ -147,11 +148,7 @@ function NewPost() {
             />
           </div>
 
-          <Button
-            onClick={handleSubmit}
-            className="w-fit mt-2"
-            disabled={isLoading}
-          >
+          <Button onClick={handleSubmit} className="w-fit" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Spinner size="small" className="text-white" />
