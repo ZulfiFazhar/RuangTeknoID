@@ -143,3 +143,28 @@
   list-style-type: decimal;
   margin-left: 2em;
 }
+/* 
+pre {
+  padding: 1em;
+  border-radius: 0.5rem;
+}
+
+code {
+  background-color: #f0f1f2;
+  padding: 0.25em 0.4em;
+  border-radius: 0.25rem;
+} */
+
+.markdown pre {
+  background-color: #f5f5f5;
+  padding: 0.25em;
+  border-radius: 0.25em;
+  overflow-x: auto;
+  margin: 0.25em 0;
+}
+
+.markdown code {
+  background-color: #f5f5f5;
+  padding: 0.25em 0.4em;
+  border-radius: 0.25em;
+}

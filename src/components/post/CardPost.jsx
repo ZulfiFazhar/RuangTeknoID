@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -24,16 +25,18 @@ import {
   Share,
   MessageCircleMore,
 } from "lucide-react";
+import formatDate from "@/lib/formatDate";
 
-export default function CardPost({ post, bookmarkPost }) {
+export default function CardPost({ post, bookmarkPost, handleVote }) {
   const navigate = useNavigate();
 
   const handleClick = () => {
     navigate(`/posts/${post.postId}`);
   };
 
-  const handleButtonClick = (event) => {
+  const handleVoteClick = (event, type) => {
     event.stopPropagation();
+    handleVote(post.postId, type, post.userVote);
   };
 
   const handleBookmarkClick = (event) => {
@@ -49,31 +52,34 @@ export default function CardPost({ post, bookmarkPost }) {
     >
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage src={post.profile_image_url} alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
           <CardTitle>{post.author}</CardTitle>
-          <CardDescription>{post.createdAt}</CardDescription>
+          <CardDescription>{formatDate(post.createdAt)}</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <img
-          src="https://images.unsplash.com/photo-1526379095098-d400fd0bf935?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src={
+            post.image_cover ||
+            `https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`
+          }
           alt="content-image"
-          className="rounded-xl"
+          className="rounded-xl object-cover w-full h-full"
         />
         <p>{post.title}</p>
         <div className="flex flex-row flex-wrap gap-1">
-          <Badge className="w-fit cursor-pointer" variant="outline">
-            #python
-          </Badge>
-          <Badge className="w-fit cursor-pointer" variant="outline">
-            #coding
-          </Badge>
-          <Badge className="w-fit cursor-pointer" variant="outline">
-            #machine-learning
-          </Badge>
+          {post.hashtags?.split(",").map((hashtag, index) => (
+            <Badge
+              key={index}
+              className="w-fit cursor-pointer"
+              variant="outline"
+            >
+              #{hashtag}
+            </Badge>
+          ))}
         </div>
       </CardContent>
       <CardFooter>
@@ -84,11 +90,27 @@ export default function CardPost({ post, bookmarkPost }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button
-                    className="m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600"
-                    onClick={handleButtonClick}
+                    className={`${
+                      post.userVote == 1
+                        ? "bg-emerald-100 text-emerald-600"
+                        : ""
+                    } m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600`}
+                    onClick={(e) => handleVoteClick(e, "up")}
                   >
-                    <ArrowBigUp />{" "}
-                    <span className="pr-1 font-bold ml-0">1</span>
+                    <ArrowBigUp
+                      className={`${
+                        post.userVote == 1
+                          ? "fill-emerald-600 text-emerald-600"
+                          : ""
+                      }`}
+                    />{" "}
+                    <span
+                      className={`pr-1 font-bold ml-0 ${
+                        post.userVote == 1 ? "text-emerald-600" : ""
+                      }`}
+                    >
+                      {post.votes}
+                    </span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Upvote</TooltipContent>
@@ -96,10 +118,16 @@ export default function CardPost({ post, bookmarkPost }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button
-                    className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary"
-                    onClick={handleButtonClick}
+                    className={`${
+                      post.userVote == -1 ? "bg-rose-100 text-rose-600" : ""
+                    } m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary`}
+                    onClick={(e) => handleVoteClick(e, "down")}
                   >
-                    <ArrowBigDown />
+                    <ArrowBigDown
+                      className={
+                        post.userVote == -1 ? "fill-rose-600 text-rose-600" : ""
+                      }
+                    />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Downvote</TooltipContent>
@@ -115,7 +143,7 @@ export default function CardPost({ post, bookmarkPost }) {
                     // onClick={handleButtonClick}
                   >
                     <MessageCircleMore size={20} />{" "}
-                    <span className="font-bold ml-0">1</span>
+                    <span className="font-bold ml-0">{post.commentsCount}</span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Comment</TooltipContent>
@@ -123,12 +151,18 @@ export default function CardPost({ post, bookmarkPost }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button
-                    className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg"
+                    className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg ${
+                      post.isBookmarked ? "bg-fuchsia-100" : ""
+                    }`}
                     onClick={handleBookmarkClick}
                   >
                     <Bookmark
                       size={20}
-                      className={post.isBookmarked ? "fill-current" : ""}
+                      className={
+                        post.isBookmarked == 1
+                          ? "fill-fuchsia-600 text-fuchsia-600"
+                          : ""
+                      }
                     />
                   </button>
                 </TooltipTrigger>
@@ -139,7 +173,7 @@ export default function CardPost({ post, bookmarkPost }) {
                 <TooltipTrigger>
                   <button
                     className="cursor-pointer hover:text-blue-600 hover:bg-blue-100 p-2 rounded-lg"
-                    onClick={handleButtonClick}
+                    // onClick={handleButtonClick}
                   >
                     <Share size={20} />
                   </button>
@@ -160,7 +194,6 @@ CardPost.propTypes = {
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
-    isBookmarked: PropTypes.bool.isRequired,
   }).isRequired,
   bookmarkPost: PropTypes.func.isRequired,
 };

@@ -13,15 +13,25 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {
   ArrowBigUp,
   ArrowBigDown,
   Bookmark,
   Share,
   MessageCircleMore,
+  MoreVertical,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import Feed from "@/pages/Posts/Feed";
 import ContentEditor from "@/components/editor/ContentEditor";
 import LoadingPage from "@/components/ui/loading-page";
+import formatDate from "@/lib/formatDate";
 
 function Post() {
   const { postId } = useParams();
@@ -63,16 +73,8 @@ function Post() {
     }
 
     const getPostDetail = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-      const refreshToken = localStorage.getItem("refreshToken");
-
       try {
-        const res = await api.get(`/post/get-detail/${postId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "x-refresh-token": refreshToken,
-          },
-        });
+        const res = await api.get(`/post/get-detail/${postId}`);
         setPost((lp) => res.data.data);
       } catch (error) {
         console.log("Error getting post detail");
@@ -95,6 +97,7 @@ function Post() {
           }
         );
         setUserPost((prevUserPost) => res.data.data);
+        console.log("User post: ", userPost);
       } catch (error) {
         alert("Error getting user post");
       }
@@ -114,11 +117,12 @@ function Post() {
 
     if (authStatus.authStatus) {
       getUserPost();
-      getComments();
+      // getComments();
     }
 
     getComments();
   }, []);
+  console.log("Comments: ", comments);
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -234,6 +238,7 @@ function Post() {
   };
 
   const handleSendComment = async (replyTo) => {
+    console.log("SendComment: ", commentInput);
     if (!authStatus.authStatus) {
       alert("You must be logged in to comment");
       return;
@@ -340,6 +345,7 @@ function Post() {
       alert("Error deleting comment");
     }
   };
+  console.log("Post data: " + JSON.stringify(post));
 
   if (!post) return <LoadingPage />;
   return (
@@ -348,22 +354,26 @@ function Post() {
       <div className="w-4/5 m-auto grid gap-6 mb-10">
         <img
           className="w-full h-80 object-cover rounded-xl mt-2"
-          src="https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src={
+            post.post.image_cover ||
+            `https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`
+          }
           alt="react js"
         />
+
         <div>
           <Link
             to={`/users/${post.user.userId}`}
             className="flex flex-row items-center gap-4"
           >
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarImage src={post.user.profile_image_url} alt="@shadcn" />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">
               <p className="font-bold">{post.user.name}</p>
               <p className="text-xs text-neutral-600">
-                Diposting pada {post.createdAt}
+                Diposting {formatDate(post.post.createdAt)}
               </p>
             </div>
           </Link>
@@ -397,7 +407,9 @@ function Post() {
                   <TooltipTrigger>
                     <button
                       onClick={() => handleVote("up", userPost.userVote)}
-                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 `}
+                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${
+                        userPost.userVote == 1 ? "bg-emerald-100" : ""
+                      }`}
                     >
                       <ArrowBigUp
                         className={`${
@@ -420,7 +432,9 @@ function Post() {
                 <Tooltip>
                   <TooltipTrigger>
                     <button
-                      className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary"
+                      className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${
+                        userPost.userVote == -1 ? "bg-rose-100" : ""
+                      }`}
                       onClick={() => handleVote("down", userPost.userVote)}
                     >
                       <ArrowBigDown
@@ -456,7 +470,9 @@ function Post() {
                 <Tooltip>
                   <TooltipTrigger>
                     <button
-                      className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg"
+                      className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg ${
+                        userPost.isBookmarked ? "bg-fuchsia-100" : ""
+                      }`}
                       onClick={() => bookmarkPost()}
                     >
                       <Bookmark
@@ -486,11 +502,198 @@ function Post() {
         </div>
 
         {showComments && (
-          <div className="grid gap-4">
-            <ContentEditor />
-            <Button onClick={() => handleSendComment(null)} className="w-fit">
-              Send
-            </Button>
+          <div>
+            <div className="grid gap-4">
+              <ContentEditor
+                value={commentInput}
+                onChange={(e) => setCommentInput(e)}
+              />
+              <div className="flex justify-end">
+                <Button
+                  onClick={() => handleSendComment(null)}
+                  className="w-fit"
+                >
+                  Send
+                </Button>
+              </div>
+            </div>
+
+            {/* <div className="flex items-center">
+              <input
+                value={commentInput}
+                onChange={(e) => setCommentInput(e.target.value)}
+                type="text"
+                placeholder="Comment di sini, mang"
+                className="border border-black mt-2 mb-1 rounded-md px-2 py-1 w-full"
+              />
+              <button
+                onClick={() => handleSendComment(null)}
+                className="bg-blue-500 text-white px-2 py-1 rounded-md ml-2"
+              >
+                Send
+              </button>
+            </div> */}
+
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <div key={comment.commentId} className="mt-4">
+                  {/* comment profile */}
+                  <div className="flex flex-row items-start gap-3">
+                    <Link to={`/users/${comment.userId}`}>
+                      <Avatar className="w-9 h-9">
+                        <AvatarImage
+                          src={comment.profile_image_url}
+                          alt="@shadcn"
+                        />
+                        <AvatarFallback>CN</AvatarFallback>
+                      </Avatar>
+                    </Link>
+                    <div className="flex flex-col w-full">
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="flex flex-col">
+                          <p className="font-semibold text-sm">
+                            {comment.name}
+                          </p>
+                          <p className="text-[0.75rem] text-neutral-600">
+                            {formatDate(comment.createdAt)}
+                          </p>
+                        </div>
+                        {comment.userId == authStatus.user?.userId && (
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <button className="p-1 rounded-full">
+                                <MoreVertical size={20} />
+                              </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent>
+                              <DropdownMenuItem>
+                                <button
+                                  onClick={() =>
+                                    handleDeleteComment(comment.commentId, true)
+                                  }
+                                >
+                                  Delete Comment
+                                </button>
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        )}
+                      </div>
+                      <div
+                        dangerouslySetInnerHTML={{ __html: comment.content }}
+                      />
+                    </div>
+                  </div>
+                  {/* reply */}
+                  <div className="flex justify-start ml-10">
+                    <Button
+                      variant="link"
+                      className="block text-xs px-2 py-1 rounded-md"
+                      onClick={() => handleToggleReply(comment.commentId)}
+                    >
+                      {replies[comment.commentId] ? (
+                        <>
+                          Tutup Balasan <ChevronUp className="inline-block" />
+                        </>
+                      ) : (
+                        <>
+                          Buka Balasan <ChevronDown className="inline-block" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+
+                  {replies[comment.commentId] && (
+                    <>
+                      <div className="flex items-center gap-2 ml-11">
+                        <input
+                          value={replyInput[comment.commentId] || ""}
+                          onChange={(e) =>
+                            setReplyInput((pr) => ({
+                              ...pr,
+                              [comment.commentId]: e.target.value,
+                            }))
+                          }
+                          type="text"
+                          placeholder="Balas disini"
+                          className="border border-gray-300 h-full rounded-md w-full px-3 py-2"
+                        />
+                        <Button
+                          onClick={() =>
+                            handleSendComment(comment.commentId, false)
+                          }
+                        >
+                          Send
+                        </Button>
+                      </div>
+                      {replies[comment.commentId].length > 0 ? (
+                        replies[comment.commentId].map((reply) => (
+                          <div key={reply.commentId} className="ml-11 mt-4">
+                            <div className="flex flex-row items-start gap-3">
+                              <Link to={`/users/${comment.userId}`}>
+                                <Avatar className="w-9 h-9">
+                                  <AvatarImage
+                                    src={comment.profile_image_url}
+                                    alt="@shadcn"
+                                  />
+                                  <AvatarFallback>CN</AvatarFallback>
+                                </Avatar>
+                              </Link>
+                              <div className="flex flex-col w-full">
+                                <div className="flex flex-row justify-between items-center">
+                                  <div className="flex flex-col">
+                                    <p className="font-semibold text-sm">
+                                      {comment.name}
+                                    </p>
+                                    <p className="text-[0.75rem] text-neutral-600">
+                                      {formatDate(reply.createdAt)}
+                                    </p>
+                                  </div>
+                                  {comment.userId ==
+                                    authStatus.user?.userId && (
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger asChild>
+                                        <button className="p-1 rounded-full">
+                                          <MoreVertical size={20} />
+                                        </button>
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent>
+                                        <DropdownMenuItem>
+                                          <button
+                                            onClick={() =>
+                                              handleDeleteComment(
+                                                reply.commentId,
+                                                false,
+                                                comment.commentId
+                                              )
+                                            }
+                                          >
+                                            Hapus Balasan
+                                          </button>
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  )}
+                                </div>
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html: reply.content,
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="ml-11 mt-4">Tidak ada balasan</div>
+                      )}
+                    </>
+                  )}
+                </div>
+              ))
+            ) : (
+              <div>Tidak ada komentar</div>
+            )}
           </div>
         )}
 
@@ -501,7 +704,7 @@ function Post() {
       </div>
 
       {/* old */}
-      <h1 className="text-xl">Post Detail</h1>
+      {/* <h1 className="text-xl">Post Detail</h1>
       <p>title : {post.post.title}</p>
       <p>content : {post.post.content}</p>
       <p>views : {post.post.views}</p>
@@ -671,9 +874,7 @@ function Post() {
         ))
       ) : (
         <div>There is no comment</div>
-      )}
-
-      <div className="min-h-screen"></div>
+      )} */}
     </div>
   );
 }

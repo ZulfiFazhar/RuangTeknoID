@@ -1,8 +1,40 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useContext } from "react";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "@/components/auth/auth-context";
 import api from "@/api/api";
 import LoadingPage from "@/components/ui/loading-page";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  ArrowBigUp,
+  ArrowBigDown,
+  Bookmark,
+  Share,
+  MessageCircleMore,
+  Eye,
+  MoreVertical,
+  ChevronUp,
+  ChevronDown,
+  Sparkles,
+} from "lucide-react";
+import formatDate from "@/lib/formatDate";
+import ReactMarkdown from "react-markdown";
+import MarkdownComponent from "@/components/ui/markdown-component";
 
 function Discussion() {
   const [question, setQuestion] = useState(null);
@@ -12,6 +44,11 @@ function Discussion() {
   const navigate = useNavigate();
   const { discussionId } = useParams();
   const { authStatus } = useContext(AuthContext);
+  const [botAnswer, setBotAnswer] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const accessToken = localStorage.getItem("accessToken");
+  const refreshToken = localStorage.getItem("refreshToken");
 
   useEffect(() => {
     if (location.state?.fromLink) {
@@ -51,9 +88,6 @@ function Discussion() {
           );
           setQuestion(response.data.data);
         } else {
-          const accessToken = localStorage.getItem("accessToken");
-          const refreshToken = localStorage.getItem("refreshToken");
-
           const response = await api.get(
             `/discussion/get-discussion-ud-author/${discussionId}`,
             {
@@ -79,8 +113,6 @@ function Discussion() {
         setAnswers(response.data.data);
         return;
       } else {
-        const accessToken = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
         try {
           const response = await api.get(
             `/discussion/get-answers-user-ud/${discussionId}`,
@@ -107,9 +139,6 @@ function Discussion() {
       alert("You must login first");
       return;
     }
-
-    const accessToken = localStorage.getItem("accessToken");
-    const refreshToken = localStorage.getItem("refreshToken");
 
     try {
       const response = await api.post(
@@ -295,12 +324,259 @@ function Discussion() {
     }
   };
 
+  const handleBotAnswer = async () => {
+    console.log("AI Answer Clicked");
+    setLoading(true);
+    try {
+      const res = await api.post("/gemini/answer-text", {
+        question:
+          "Pertanyaan: " +
+          question.discussion.title +
+          ". Detail: " +
+          question.discussion.content,
+      });
+      const answer = res.data.data.answer;
+      setBotAnswer(answer);
+
+      try {
+        const response = await api.post(
+          "/discussion/create-bot-answer", // Endpoint baru untuk menyimpan jawaban bot
+          {
+            answerTo: question.discussion.discussionId,
+            content: answer,
+          }
+        );
+
+        // Reset answer input state
+        setAnswerInput("");
+
+        // Update answers state
+        setAnswers((prevAnswers) => {
+          return [response.data.data.newAnswer, ...prevAnswers];
+        });
+      } catch (error) {
+        console.log("Error adding bot answer:", error);
+      }
+    } catch (error) {
+      console.log("Error generating bot answer:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    console.log("Updated botAnswer", botAnswer);
+  }, [botAnswer]);
+
+  console.log("Answer", answers);
+
   if (!question) {
     return <LoadingPage />;
   }
 
   return (
-    <div>
+    <div className="w-4/5 m-auto h-full mt-4">
+      {/* new */}
+      <div className="grid gap-2">
+        {/* haashtag */}
+        <div className="flex gap-2">
+          {question.hashtags.map((hashtag, index) => (
+            <Badge key={index} className="w-fit rounded-full py-1 px-3">
+              #{hashtag}
+            </Badge>
+          ))}
+        </div>
+
+        {/* title */}
+        <div className="">
+          <MarkdownComponent
+            content={question.discussion.title}
+            className="text-3xl font-bold"
+          />
+        </div>
+
+        {/* user info */}
+        <div>
+          <Link
+            to={`/users/${question.discussion.userId}`}
+            className="flex flex-row items-center gap-4"
+          >
+            <Avatar>
+              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <p className="font-bold">{question.author.name}</p>
+              <p className="text-xs text-neutral-600">
+                Diposting {formatDate(question.discussion.createdAt)}
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        {/* content */}
+        <MarkdownComponent content={question.discussion.content} />
+
+        {/* action */}
+        <div>
+          <TooltipProvider>
+            <div className="flex justify-between items-center w-full">
+              {/* Votes */}
+              <div className="border-2 border-secondary rounded-lg flex text-neutral-600">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      // onClick={() => handleVote("up", userPost.userVote)}
+                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 `}
+                    >
+                      <ArrowBigUp className={``} />{" "}
+                      <span className={`pr-1 font-bold ml-0 `}>
+                        {question.discussion.votes}
+                      </span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Upvote</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary `}
+                      // onClick={() => handleVote("down", userPost.userVote)}
+                    >
+                      <ArrowBigDown />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Downvote</TooltipContent>
+                </Tooltip>
+              </div>
+
+              {/* Action */}
+              <div className="flex gap-2 text-neutral-600">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      className={`cursor-pointer flex gap-1 items-center hover:text-amber-600 hover:bg-amber-100 p-2 rounded-lg`}
+                      // onClick={toggleComments}
+                    >
+                      <MessageCircleMore size={20} />{" "}
+                      <span className="font-bold ml-0">1</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Replies</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button
+                      className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg `}
+                      // onClick={() => bookmarkPost()}
+                    >
+                      <Bookmark size={20} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Bookmark</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger>
+                    <button className="cursor-pointer hover:text-blue-600 hover:bg-blue-100 p-2 rounded-lg">
+                      <Share size={20} />
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>Share</TooltipContent>
+                </Tooltip>
+              </div>
+            </div>
+          </TooltipProvider>
+        </div>
+
+        {/* input for answering the question */}
+        <div className="flex items-center gap-2 mt-4">
+          <textarea
+            value={answerInput}
+            onChange={(e) => setAnswerInput(e.target.value)}
+            type="text"
+            placeholder="Jawab disini.."
+            className="border border-gray-300 h-full rounded-md w-full px-3 py-2"
+          />
+          <Button onClick={() => handleSendAnswer(null)}>Send</Button>
+        </div>
+
+        {/*  Jawaban */}
+        <div className="grid gap-2">
+          {/* AI Answer Button */}
+          <div className="flex flex-col justify-start items-start">
+            {loading ? (
+              <Spinner animation="border" role="status">
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            ) : (
+              <Button
+                variant="link"
+                onClick={handleBotAnswer}
+                className="m-0 p-0"
+              >
+                <Sparkles />
+                Answer with AI
+              </Button>
+            )}
+          </div>
+          {answers.map((answer) => (
+            <div key={answer.discussion.discussionId} className="">
+              <div className="flex flex-row items-start gap-3">
+                <Link to={`/users/${answer.author.userId}`}>
+                  <Avatar className="w-9 h-9">
+                    <AvatarImage
+                      src="https://github.com/shadcn.png"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </Link>
+                <div className="flex flex-col w-full">
+                  <div className="flex flex-row justify-between items-center">
+                    <div className="flex flex-col">
+                      <p className="font-semibold text-sm">
+                        {answer.author.name}
+                      </p>
+                      <p className="text-[0.75rem] text-neutral-600">
+                        {formatDate(answer.discussion.createdAt)}
+                      </p>
+                    </div>
+                    {answer.author.userId === authStatus.user?.userId && (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button className="p-1 rounded-full">
+                            <MoreVertical size={20} />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>
+                            <button
+                              onClick={() =>
+                                handleDeleteAnswer(
+                                  answer.discussion.discussionId
+                                )
+                              }
+                            >
+                              Hapus Balasan
+                            </button>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                  </div>
+                  <div>
+                    <MarkdownComponent content={answer.discussion.content} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* old */}
       <div className="w-full bg-gray-300 mb-2 p-2 rounded-md">
         <h1 className="text-xl font-bold">Question :</h1>
         <p>Title : {question.discussion.title}</p>

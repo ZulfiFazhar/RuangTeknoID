@@ -25,7 +25,7 @@ const ContentEditor = ({ value, onChange }) => {
       Underline,
       Link,
     ],
-    content: value || "<p>Mulai menulis artikel...</p>",
+    content: value || "Tulis disini..",
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
       onChange(html);
