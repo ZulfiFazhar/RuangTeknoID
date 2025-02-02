@@ -15,7 +15,7 @@ const MarkdownEditor = ({ value, onChange }) => {
     <div className="border border-gray-300 rounded-md w-full">
       <SimpleMDE
         value={markdownValue}
-        // onChange={handleEditorChange}
+        onChange={handleEditorChange}
         options={{
           spellChecker: false,
           toolbar: [

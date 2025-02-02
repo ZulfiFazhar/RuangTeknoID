@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useContext, useEffect } from "react";
 import LoginFirst from "@/components/auth/login-first";
 import { AuthContext } from "@/components/auth/auth-context";
@@ -25,7 +26,7 @@ function Profile() {
       try {
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
-        console.log("tes")
+        console.log("tes");
         const res = await api.get("user/users/get-details", {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -57,11 +58,11 @@ function Profile() {
   const handleCancelFile = () => {
     setFile(null);
     setPreview(null);
-  }
+  };
 
   const handleUpload = async () => {
     if (!file) return alert("Please select a file");
-    setLoading(l => true);
+    setLoading((l) => true);
 
     // try {
     //   await api.delete(`imagekit/delete/${fileId}`);
@@ -107,7 +108,7 @@ function Profile() {
         },
       });
 
-      setLoading(l => false);
+      setLoading((l) => false);
       alert("Profile updated");
       navigate(`/users/${authStatus.user.userId}`);
     } catch (error) {
@@ -122,17 +123,23 @@ function Profile() {
         <h1>Foto Profil</h1>
         <input type="file" onChange={handleFileChange} />
 
-        {(user.profile_image_url || imgPreview) && 
-        <>
-          <img src={imgPreview || user.profile_image_url} alt="img" className="w-40" />
-          {imgPreview && 
-            <button
-              className="bg-red-500 text-white px-2 py-1 rounded-md ml-2"
-              onClick={handleCancelFile}
-            >Cancel</button>
-          }
-        </>
-        }
+        {(user.profile_image_url || imgPreview) && (
+          <>
+            <img
+              src={imgPreview || user.profile_image_url}
+              alt="img"
+              className="w-40"
+            />
+            {imgPreview && (
+              <button
+                className="bg-red-500 text-white px-2 py-1 rounded-md ml-2"
+                onClick={handleCancelFile}
+              >
+                Cancel
+              </button>
+            )}
+          </>
+        )}
 
         <div className="mt-2">
           <label htmlFor="name">Name</label>
@@ -141,7 +148,7 @@ function Profile() {
             id="name"
             name="name"
             value={user.name}
-            onChange={e => setUser(u => ({ ...u, name: e.target.value }))}
+            onChange={(e) => setUser((u) => ({ ...u, name: e.target.value }))}
             className="block px-2 py-1 bg-slate-100 border border-black rounded-md"
           />
         </div>
@@ -153,7 +160,9 @@ function Profile() {
             id="username"
             name="username"
             value={user.username || ""}
-            onChange={e => setUser(u => ({ ...u, username: e.target.value }))}
+            onChange={(e) =>
+              setUser((u) => ({ ...u, username: e.target.value }))
+            }
             className="block px-2 py-1 bg-slate-100 border border-black rounded-md"
           />
         </div>
@@ -165,7 +174,9 @@ function Profile() {
             id="full_name"
             name="full_name"
             value={user.full_name || ""}
-            onChange={e => setUser(u => ({ ...u, full_name: e.target.value }))}
+            onChange={(e) =>
+              setUser((u) => ({ ...u, full_name: e.target.value }))
+            }
             className="block px-2 py-1 bg-slate-100 border border-black rounded-md"
           />
         </div>
@@ -177,7 +188,7 @@ function Profile() {
             id="bio"
             name="bio"
             value={user.bio || ""}
-            onChange={e => setUser(u => ({ ...u, bio: e.target.value }))}
+            onChange={(e) => setUser((u) => ({ ...u, bio: e.target.value }))}
             className="block px-2 py-1 bg-slate-100 border border-black rounded-md"
           />
         </div>
@@ -189,7 +200,9 @@ function Profile() {
             id="location"
             name="location"
             value={user.location || ""}
-            onChange={e => setUser(u => ({ ...u, location: e.target.value }))}
+            onChange={(e) =>
+              setUser((u) => ({ ...u, location: e.target.value }))
+            }
             className="block px-2 py-1 bg-slate-100 border border-black rounded-md"
           />
         </div>
@@ -201,10 +214,12 @@ function Profile() {
             id="personal_url"
             name="personal_url"
             value={user.personal_url || ""}
-            onChange={e => setUser(u => ({ ...u, personal_url: e.target.value }))}
+            onChange={(e) =>
+              setUser((u) => ({ ...u, personal_url: e.target.value }))
+            }
             className="block px-2 py-1 bg-slate-100 border border-black rounded-md"
           />
-        </div>    
+        </div>
 
         {loading && <p className="text-5xl font-bold my-3">Loading...</p>}
 
@@ -213,7 +228,7 @@ function Profile() {
           onClick={handleUpload}
         >
           Update
-        </button>  
+        </button>
       </div>
     </div>
   );

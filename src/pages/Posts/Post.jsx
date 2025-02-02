@@ -32,6 +32,7 @@ import Feed from "@/pages/Posts/Feed";
 import ContentEditor from "@/components/editor/ContentEditor";
 import LoadingPage from "@/components/ui/loading-page";
 import formatDate from "@/lib/formatDate";
+import MarkdownComponent from "@/components/ui/markdown-component";
 
 function Post() {
   const { postId } = useParams();
@@ -393,10 +394,11 @@ function Post() {
           ))}
         </div>
 
-        <div
+        {/* <div
           dangerouslySetInnerHTML={{ __html: post.post.content }}
           className="text-justify grid gap-2"
-        />
+        /> */}
+        <MarkdownComponent content={post.post.content} />
 
         <div>
           <TooltipProvider>
