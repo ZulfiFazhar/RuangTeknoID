@@ -27,6 +27,8 @@ import EditDiscussion from "./pages/Discussions/EditDiscussion";
 import Users from "./pages/Users/Users";
 import User from "./pages/Users/User";
 import UpdateProfile from "./pages/Users/UpdateProfile";
+import UserProfile from "./pages/Users/UserProfile";
+import Dashboard from "./pages/Users/Dashboard";
 
 import { AuthContext } from "./components/auth/auth-context";
 import api from "@/api/api";
@@ -103,7 +105,9 @@ function App() {
                   </Route>
                   <Route path="/users">
                     <Route index element={<Users />} />
-                    <Route path="update-profile" element={<UpdateProfile />} />
+                    <Route path="settings" element={<UpdateProfile />} />
+                    <Route path="profile" element={<UserProfile />} />
+                    <Route path="dashboard" element={<Dashboard />} />
                     <Route path=":userId" element={<User />} />
                   </Route>
                   <Route path="/threads" element={<Threads />} />

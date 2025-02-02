@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 import api from "@/api/api";
 import { AuthContext } from "@/components/auth/auth-context";
 import CardDiscus from "@/components/discussion/CardDiscus";
@@ -44,7 +44,7 @@ function Discussions() {
           <Separator />
         </div>
       ))}
-      {questions.map((question) => (
+      {/* {questions.map((question) => (
         <div
           key={question.discussionId}
           className="w-full bg-gray-300 mb-2 p-2 rounded-md"
@@ -83,7 +83,7 @@ function Discussions() {
             </Link>
           </div>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 }
