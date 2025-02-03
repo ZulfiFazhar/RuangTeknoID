@@ -40,6 +40,11 @@ export default function CardDiscus({ question }) {
     return text.substring(0, maxLength) + "...";
   };
 
+  let hashtags = [];
+  if(question.hashtags_name){
+    hashtags = question.hashtags_name.split(",");
+  }
+
   return (
     <Card
       className="cursor-pointer hover:shadow-lg border-none border-0 shadow-none"
@@ -48,11 +53,11 @@ export default function CardDiscus({ question }) {
     >
       <CardHeader className="flex flex-row items-center gap-4">
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarImage src={question.profile_image_url} alt="@shadcn" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
         <div className="flex flex-col">
-          <CardTitle>Author</CardTitle>
+          <CardTitle>{question.author_name}</CardTitle>
           <CardDescription>{formatDate(question.createdAt)}</CardDescription>
         </div>
       </CardHeader>
@@ -63,7 +68,14 @@ export default function CardDiscus({ question }) {
         />
         <MarkdownComponent content={truncateText(question.content, 200)} />
         <div className="flex flex-row flex-wrap gap-1">
-          <Badge variant="outline">#python</Badge>
+          {
+            hashtags.map((hashtag, index) => (
+              <Badge key={index} variant="outline">
+                #{hashtag}
+              </Badge>
+            ))
+          }
+
         </div>
       </CardContent>
       <CardFooter>

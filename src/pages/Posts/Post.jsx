@@ -40,7 +40,7 @@ function Post() {
   const [userPost, setUserPost] = useState({});
   const [commentInput, setCommentInput] = useState("");
   const [replyInput, setReplyInput] = useState({});
-  const [comments, setComments] = useState({});
+  const [comments, setComments] = useState([]);
   const [replies, setReplies] = useState({});
   const [showComments, setShowComments] = useState(false);
   const { authStatus } = useContext(AuthContext);
@@ -463,7 +463,7 @@ function Post() {
                       onClick={toggleComments}
                     >
                       <MessageCircleMore size={20} />{" "}
-                      <span className="font-bold ml-0">1</span>
+                      <span className="font-bold ml-0">{comments.length}</span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Comment</TooltipContent>
