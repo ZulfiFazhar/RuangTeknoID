@@ -20,11 +20,10 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ~/ruangteknoid/RuangTeknoID
 
       - name: Build project
         run: npm run build
-        working-directory: ~/ruangteknoid/RuangTeknoID
+        
       - name: Deploy to VPS
         run: |
           ssh zulfi_fazhar12@34.136.71.182 << 'EOF'
