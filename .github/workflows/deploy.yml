@@ -20,19 +20,28 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./RuangTeknoID
 
       - name: Build project
         run: npm run build
-        
-      - name: Deploy to VPS
-        run: |
-          ssh -t zulfi_fazhar12@34.136.71.182 << 'EOF'
+        working-directory: ./RuangTeknoID
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploying to VPS
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOSTNAME }}
+          username: ${{ secrets.VPS_USERNAME }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          port: ${{ secrets.VPS_PORT }}
+          script: |
             cd ~/ruangteknoid/RuangTeknoID/
-            git pull origin main
+            git pull
             npm install
             npm run build
             sudo cp -rf ~/ruangteknoid/RuangTeknoID/dist/* /var/www/ruangteknoid.site/build/
             sudo systemctl restart nginx
-          EOF
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
