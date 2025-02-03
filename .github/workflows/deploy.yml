@@ -30,12 +30,11 @@ jobs:
 
     steps:
       - name: Deploying to VPS
-        uses: appleboy/ssh-action@v0.1.4
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.VPS_HOSTNAME }}
           username: ${{ secrets.VPS_USERNAME }}
-          password: ${{ secrets.VPS_PASSWORD }}
-          port: ${{ secrets.VPS_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/ruangteknoid/RuangTeknoID/
             git pull
