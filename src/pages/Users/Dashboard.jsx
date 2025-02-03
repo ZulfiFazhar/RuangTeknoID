@@ -55,14 +55,11 @@ export default function ProfileDashboard() {
       <Card className="p-4 mb-6">
         <div className="flex items-center space-x-4">
           <Avatar>
-            <AvatarImage
-              src="https://via.placeholder.com/150"
-              alt="User Avatar"
-            />
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-xl font-semibold">John Doe</h2>
+            <h2 className="text-xl font-semibold">rugbyagreeable</h2>
             <p className="text-gray-500">Software Engineer</p>
           </div>
         </div>
