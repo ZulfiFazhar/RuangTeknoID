@@ -48,9 +48,9 @@ function Home() {
 
       <div className="w-4/5 m-auto mt-4">
         {currentPage === 1 && <Feed />}
-        {currentPage === 2 && <Test />}
-        {currentPage === 3 && <LoadingPage />}
-        {currentPage === 4 && <UserProfile />}
+        {/* {currentPage === 2 && <Test />} */}
+        {/* {currentPage === 3 && <LoadingPage />} */}
+        {/* {currentPage === 4 && <UserProfile />} */}
       </div>
     </div>
   );
