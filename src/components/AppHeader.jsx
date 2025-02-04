@@ -46,7 +46,6 @@ export function AppHeader() {
 
   return (
     <header className="flex h-16 shrink-0 items-center gap-2 px-4 justify-between transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 fixed bg-background w-full z-50">
-      {/* Bagian kiri */}
       <div className="flex items-center gap-2">
         <SidebarTrigger className="-ml-2" />
         <Separator orientation="vertical" className="h-4" />
@@ -66,9 +65,6 @@ export function AppHeader() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-
-      {/* Bagian kanan */}
-      <div>{/* <LoginButton /> */}</div>
     </header>
   );
 }

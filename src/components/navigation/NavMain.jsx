@@ -4,91 +4,56 @@ import { Link } from "react-router-dom";
 import {
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SearchHandling } from "./SearchHandling";
 import { data } from "@/components/navigation/data";
 import { AuthContext } from "../auth/auth-context";
 
 export function NavMain() {
   const { authStatus } = React.useContext(AuthContext);
-  const [open, setOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    const handleKeydown = (e) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((prevOpen) => !prevOpen);
-      }
-    };
-
-    document.addEventListener("keydown", handleKeydown);
-    return () => document.removeEventListener("keydown", handleKeydown);
-  }, []);
 
   return (
     <SidebarMenu>
-      <SidebarGroup>
-        <SidebarGroupContent>
-          <SidebarMenu className="gap-2">
-            {data.NavSearch && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <span
-                    onClick={() => setOpen(true)}
-                    className="flex items-center justify-between w-full cursor-pointer border hover:border-2 hover:border-black bg-black text-white font-semibold"
-                  >
-                    <span className="flex items-center gap-2">
-                      <data.NavSearch.icon width={16} />
-                      <span>{data.NavSearch.title}</span>
-                    </span>
-                    <kbd className="inline-flex items-center gap-1 px-1.5 font-semibold">
-                      <span className="text-xs">⌘</span>K
-                    </kbd>
-                  </span>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
+      {authStatus.authStatus && (
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-2">
+              {data.NewPost && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      to={data.NewPost.url}
+                      className="flex items-center gap-2 border hover:border-2 hover:border-black bg-black text-white font-semibold px-2 py-1"
+                    >
+                      <data.NewPost.icon width={16} />
+                      <span>{data.NewPost.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
 
-            {authStatus.authStatus && data.NewPost && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to={data.NewPost.url}
-                    className="flex items-center gap-2 border hover:border-2 hover:border-black bg-black text-white font-semibold px-2 py-1"
-                  >
-                    <data.NewPost.icon width={16} />
-                    <span>{data.NewPost.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-
-            {authStatus.authStatus && data.AskQuestion && (
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link
-                    to={data.AskQuestion.url}
-                    className="flex items-center gap-2 border hover:border-2 hover:border-black bg-black text-white font-semibold px-2 py-1"
-                  >
-                    <data.AskQuestion.icon width={16} />
-                    <span>{data.AskQuestion.title}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-          </SidebarMenu>
-        </SidebarGroupContent>
-      </SidebarGroup>
+              {data.AskQuestion && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link
+                      to={data.AskQuestion.url}
+                      className="flex items-center gap-2 border hover:border-2 hover:border-black bg-black text-white font-semibold px-2 py-1"
+                    >
+                      <data.AskQuestion.icon width={16} />
+                      <span>{data.AskQuestion.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
 
       {data.navAction.map((actionGroup) => (
         <SidebarGroup key={actionGroup.title}>
-          <SidebarGroupLabel className="font-bold">
-            {actionGroup.title}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {actionGroup.items.map((item) => (
@@ -143,8 +108,6 @@ export function NavMain() {
           </SidebarGroup>
         </Collapsible>
       ))} */}
-
-      <SearchHandling open={open} onOpenChange={setOpen} />
     </SidebarMenu>
   );
 }

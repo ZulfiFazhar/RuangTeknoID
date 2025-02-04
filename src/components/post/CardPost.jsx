@@ -46,7 +46,7 @@ export default function CardPost({ post, bookmarkPost, handleVote }) {
 
   return (
     <Card
-      className="cursor-pointer hover:shadow-lg"
+      className="cursor-pointer hover:shadow-lg flex flex-col h-full"
       key={post.postId}
       onClick={handleClick}
     >
@@ -82,7 +82,8 @@ export default function CardPost({ post, bookmarkPost, handleVote }) {
           ))}
         </div>
       </CardContent>
-      <CardFooter>
+
+      <CardFooter className="mt-auto">
         <TooltipProvider>
           <div className="flex justify-between items-center w-full">
             {/* Votes */}

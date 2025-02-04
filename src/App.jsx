@@ -33,6 +33,7 @@ import Dashboard from "./pages/Users/Dashboard";
 import { AuthContext } from "./components/auth/auth-context";
 import api from "@/api/api";
 import "./App.css";
+// import { Header } from "@/components/Header";
 
 function App() {
   const [authStatus, setAuthStatus] = useState({
@@ -83,7 +84,7 @@ function App() {
           <Route
             path="/*"
             element={
-              <MainLayout>
+              <MainLayout className="mt-16">
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/bookmark" element={<Bookmark />} />
