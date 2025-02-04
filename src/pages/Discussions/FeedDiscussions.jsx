@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState, useContext } from "react";
 // import { Link } from "react-router-dom";
 import api from "@/api/api";
@@ -5,7 +7,7 @@ import { AuthContext } from "@/components/auth/auth-context";
 import CardDiscus from "@/components/discussion/CardDiscus";
 import { Separator } from "@/components/ui/separator";
 
-function Discussions() {
+function Discussions({ type = "all" }) {
   const [questions, setQuestions] = useState([]);
   const { authStatus } = useContext(AuthContext);
 
@@ -36,8 +38,7 @@ function Discussions() {
   console.log("Data Questions: ", questions);
 
   return (
-    <div className="w-4/5 m-auto h-full">
-      <h1 className="text-2xl font-bold">Forum Diskusi</h1>
+    <div className="m-auto h-full">
       {questions.map((question) => (
         <div className="grid gap-4" key={question.discussionId}>
           <CardDiscus question={question} />

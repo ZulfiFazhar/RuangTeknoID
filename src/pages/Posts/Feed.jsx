@@ -6,7 +6,7 @@ import api from "@/api/api";
 import { AuthContext } from "@/components/auth/auth-context";
 import CardPost from "@/components/post/CardPost";
 
-function Home({ type = "all" }) {
+function Feed({ type = "all" }) {
   const [posts, setPosts] = useState([]);
   const { authStatus } = useContext(AuthContext);
 
@@ -51,8 +51,8 @@ function Home({ type = "all" }) {
           }
         }
       } catch (error) {
-        alert("Error getting posts");
         console.log(error);
+        window.location.reload();
       }
     };
 
@@ -156,4 +156,4 @@ function Home({ type = "all" }) {
   );
 }
 
-export default Home;
+export default Feed;
