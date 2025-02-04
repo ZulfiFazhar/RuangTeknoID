@@ -26,14 +26,16 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import api from "@/api/api";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AuthContext } from "../auth/auth-context";
 import { Link, useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export function NavUser() {
   const isMobile = window.innerWidth <= 768;
   const { authStatus, setAuthStatus } = useContext(AuthContext);
   const navigate = useNavigate();
+
   const handleLogout = async () => {
     try {
       // Kirim request ke endpoint logout
@@ -62,16 +64,35 @@ export function NavUser() {
   };
   console.log("authStatus: ", authStatus);
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        {authStatus.authStatus ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <SidebarMenuButton
-                size="lg"
-                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-              >
-                <Avatar className="h-8 w-8 rounded-lg">
+    <div>
+      {authStatus.authStatus ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button
+              size="lg"
+              className="flex gap-2 py-2 px-4 hover:bg-gray-100 rounded-lg"
+            >
+              <Avatar className="h-8 w-8 rounded-lg">
+                <AvatarImage
+                  src={authStatus.user.avatar}
+                  alt={authStatus.user.name}
+                />
+                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+              </Avatar>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold capitalize">
+                  {authStatus.user.name}
+                </span>
+                <span className="truncate text-xs">
+                  {authStatus.user.email}
+                </span>
+              </div>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="min-w-56 rounded-lg mr-5">
+            <DropdownMenuLabel className="p-0 font-normal cursor-default">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <Avatar className="h-12 w-12 rounded-lg">
                   <AvatarImage
                     src={authStatus.user.avatar}
                     alt={authStatus.user.name}
@@ -86,71 +107,38 @@ export function NavUser() {
                     {authStatus.user.email}
                   </span>
                 </div>
-                <ChevronsUpDown className="ml-auto size-4" />
-              </SidebarMenuButton>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-              side={isMobile ? "bottom" : "right"}
-              align="end"
-              sideOffset={4}
-            >
-              <DropdownMenuLabel className="p-0 font-normal cursor-default">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage
-                      src={authStatus.user.avatar}
-                      alt={authStatus.user.name}
-                    />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold capitalize">
-                      {authStatus.user.name}
-                    </span>
-                    <span className="truncate text-xs">
-                      {authStatus.user.email}
-                    </span>
-                  </div>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem onClick={() => navigate("/users/dashboard")}>
-                  <ChartArea />
-                  Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/users/profile")}>
-                  <User />
-                  Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/users/settings")}>
-                  <Settings />
-                  Settings
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={handleLogout}
-                className="cursor-pointer"
-              >
-                <LogOut />
-                Log out
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => navigate("/users/dashboard")}>
+                <ChartArea />
+                Dashboard
               </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <SidebarMenuButton asChild>
-            <Link
-              to="/login"
-              className="flex justify-center items-center border hover:border-2 hover:border-black bg-black text-white font-semibold py-1"
-            >
-              <LogIn width={16} />
-              <span>Login</span>
-            </Link>
-          </SidebarMenuButton>
-        )}
-      </SidebarMenuItem>
-    </SidebarMenu>
+              <DropdownMenuItem onClick={() => navigate("/users/profile")}>
+                <User />
+                Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/users/settings")}>
+                <Settings />
+                Settings
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+              <LogOut />
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : (
+        <Button className="rounded-xl">
+          <Link to="/login" className="flex justify-center items-center gap-3">
+            <LogIn width={16} />
+            <span>Login</span>
+          </Link>
+        </Button>
+      )}
+    </div>
   );
 }
