@@ -28,7 +28,7 @@ export function Header() {
           <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
             <SquareTerminal className="size-5" />
           </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
+          <div className="flex-1 text-left text-sm leading-tight sm:grid hidden">
             <span className="truncate font-semibold">Ruang Teknologi</span>
             <span className="truncate font-semibold">Indonesia</span>
           </div>
@@ -38,7 +38,7 @@ export function Header() {
         <div>
           <Button
             variant="outline"
-            className="w-64 flex items-center gap-2 justify-between"
+            className="sm:w-64 w-48 flex items-center gap-2 justify-between"
             onClick={() => setOpen(true)}
           >
             <div className="flex gap-2">

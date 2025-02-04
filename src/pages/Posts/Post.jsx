@@ -286,7 +286,14 @@ function Post() {
         // update replies state
         setReplies((prevReplies) => {
           const updatedReplies = { ...prevReplies };
-          updatedReplies[replyTo] = [{...res.data.data, name: authStatus.user.name, profile_image_url: authStatus.user.profile_image_url}, ...prevReplies[replyTo]];
+          updatedReplies[replyTo] = [
+            {
+              ...res.data.data,
+              name: authStatus.user.name,
+              profile_image_url: authStatus.user.profile_image_url,
+            },
+            ...prevReplies[replyTo],
+          ];
           return updatedReplies;
         });
       } else {
@@ -295,7 +302,11 @@ function Post() {
 
         // update comments state
         setComments((prevComments) => [
-          { ...res.data.data, name: authStatus.user.name, profile_image_url: authStatus.user.profile_image_url },
+          {
+            ...res.data.data,
+            name: authStatus.user.name,
+            profile_image_url: authStatus.user.profile_image_url,
+          },
           ...prevComments,
         ]);
       }
@@ -379,7 +390,10 @@ function Post() {
           </Link>
         </div>
 
-        <h1 className="font-bold text-2xl m-0 p-0">{post.post.title}</h1>
+        <MarkdownComponent
+          content={post.post.title}
+          className="font-bold text-3xl m-0 p-0"
+        />
 
         <div className="flex flex-row flex-wrap gap-2.5">
           {post.hashtags.map((hashtag, index) => (

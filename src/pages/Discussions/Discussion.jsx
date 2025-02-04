@@ -163,7 +163,7 @@ function Discussion() {
         let newAnswer = response.data.data.newAnswer;
         newAnswer.author = {
           ...newAnswer.author,
-          profile_image_url: authStatus.user.profile_image_url
+          profile_image_url: authStatus.user.profile_image_url,
         };
         return [newAnswer, ...prevAnswers];
       });
@@ -397,9 +397,8 @@ function Discussion() {
             ...prevQuestion.userDiscussion,
             isBookmarked: !prevQuestion.userDiscussion.isBookmarked,
           },
-        }
+        };
       });
-
     } catch (error) {
       alert("Error bookmarking discussion");
     }
@@ -417,11 +416,11 @@ function Discussion() {
   }
 
   return (
-    <div className="w-4/5 m-auto h-full mt-4 pb-10">
+    <div>
       {/* new */}
-      <div className="grid gap-2">
+      <div className="w-4/5 m-auto grid gap-2 mb-10">
         {/* haashtag */}
-        <div className="flex gap-2">
+        <div className="flex flex-row flex-wrap gap-2.5">
           {question.hashtags.map((hashtag, index) => (
             <Badge key={index} className="w-fit rounded-full py-1 px-3">
               #{hashtag}
@@ -433,7 +432,7 @@ function Discussion() {
         <div className="">
           <MarkdownComponent
             content={question.discussion.title}
-            className="text-3xl font-bold"
+            className="text-3xl font-bold m-0 p-0"
           />
         </div>
 
@@ -471,10 +470,16 @@ function Discussion() {
                 <Tooltip>
                   <TooltipTrigger>
                     <button
-                      onClick={() => handleVote("up", question.userDiscussion?.userVote)}
-                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${question.userDiscussion?.userVote === 1 ? "bg-emerald-100 text-emerald-600" : ""}`}
+                      onClick={() =>
+                        handleVote("up", question.userDiscussion?.userVote)
+                      }
+                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${
+                        question.userDiscussion?.userVote === 1
+                          ? "bg-emerald-100 text-emerald-600"
+                          : ""
+                      }`}
                     >
-                      <ArrowBigUp 
+                      <ArrowBigUp
                         className={`${
                           question.userDiscussion?.userVote == 1
                             ? "fill-emerald-600 text-emerald-600"
@@ -491,10 +496,16 @@ function Discussion() {
                 <Tooltip>
                   <TooltipTrigger>
                     <button
-                      className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${question.userDiscussion?.userVote === -1 ? "bg-rose-100 text-rose-600" : ""}`}
-                      onClick={() => handleVote("down", question.userDiscussion?.userVote)}
+                      className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${
+                        question.userDiscussion?.userVote === -1
+                          ? "bg-rose-100 text-rose-600"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        handleVote("down", question.userDiscussion?.userVote)
+                      }
                     >
-                      <ArrowBigDown 
+                      <ArrowBigDown
                         className={`${
                           question.userDiscussion?.userVote == -1
                             ? "fill-rose-600 text-rose-600"
@@ -516,7 +527,9 @@ function Discussion() {
                       // onClick={toggleComments}
                     >
                       <MessageCircleMore size={20} />{" "}
-                      <span className="font-bold ml-0">{question.discussion.answer_count}</span>
+                      <span className="font-bold ml-0">
+                        {question.discussion.answer_count}
+                      </span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Replies</TooltipContent>
@@ -524,15 +537,11 @@ function Discussion() {
 
                 <Tooltip>
                   <TooltipTrigger>
-                    {/* <button
-                      className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg `}
-                      // onClick={() => bookmarkPost()}
-                    >
-                      <Bookmark size={20} />
-                    </button> */}
                     <button
                       className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg ${
-                        question.userDiscussion?.isBookmarked == 1 ? "bg-fuchsia-100" : ""
+                        question.userDiscussion?.isBookmarked == 1
+                          ? "bg-fuchsia-100"
+                          : ""
                       }`}
                       onClick={bookmarkDiscussion}
                     >
@@ -580,7 +589,7 @@ function Discussion() {
           <div className="flex flex-col justify-start items-start">
             {loading ? (
               <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
+                <span>Loading...</span>
               </Spinner>
             ) : (
               <Button
@@ -602,7 +611,7 @@ function Discussion() {
                       src={answer.author.profile_image_url}
                       alt="@shadcn"
                     />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarFallback>{answer.author.name[0]}</AvatarFallback>
                   </Avatar>
                 </Link>
                 <div className="flex flex-col w-full">
@@ -638,8 +647,11 @@ function Discussion() {
                       </DropdownMenu>
                     )}
                   </div>
-                  <div>
-                    <MarkdownComponent content={answer.discussion.content} />
+                  <div className="-ml-11 sm:-ml-0 pt-2 max-w-[calc(100vh*0.6)]">
+                    <MarkdownComponent
+                      content={answer.discussion.content}
+                      className="max-w-full break-words"
+                    />
                   </div>
                 </div>
               </div>
