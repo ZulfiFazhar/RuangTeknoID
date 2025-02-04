@@ -16,7 +16,8 @@ function Home() {
   return (
     <div>
       <div className="flex gap-4 w-4/5 m-auto">
-        <Button
+        <h1 className="text-2xl font-bold mb-4">Artikel</h1>
+        {/* <Button
           variant="link"
           className={`p-0 ${currentPage === 1 ? "underline font-bold" : ""}`}
           onClick={() => handlePageChange(1)}
@@ -43,10 +44,10 @@ function Home() {
           onClick={() => handlePageChange(4)}
         >
           For You
-        </Button>
+        </Button> */}
       </div>
 
-      <div className="w-4/5 m-auto mt-4">
+      <div className="w-4/5 m-auto">
         {currentPage === 1 && <Feed />}
         {/* {currentPage === 2 && <Test />} */}
         {/* {currentPage === 3 && <LoadingPage />} */}
