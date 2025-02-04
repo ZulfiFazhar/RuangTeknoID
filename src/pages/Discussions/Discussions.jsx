@@ -33,7 +33,6 @@ function Discussions() {
 
     fetchQuestionsUD();
   }, []);
-  console.log("Data Questions: ", questions);
 
   return (
     <div className="w-4/5 m-auto h-full">

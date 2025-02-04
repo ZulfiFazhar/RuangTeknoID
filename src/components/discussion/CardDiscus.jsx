@@ -33,6 +33,7 @@ export default function CardDiscus({ question }) {
   const handleClick = () => {
     navigate(`/discussions/${question.discussionId}`);
   };
+
   const truncateText = (text, maxLength) => {
     if (text.length <= maxLength) {
       return text;
@@ -85,7 +86,7 @@ export default function CardDiscus({ question }) {
             <div className="border-2 border-secondary rounded-lg flex text-neutral-600">
               <Tooltip>
                 <TooltipTrigger>
-                  <button className="m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600">
+                  <button className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${` ${question.userVote == 1 ? "bg-emerald-100 text-emerald-600" : ""}`}`}>
                     <ArrowBigUp />{" "}
                     <span className="pr-1 font-bold ml-0">
                       {question.votes}
@@ -96,7 +97,7 @@ export default function CardDiscus({ question }) {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger>
-                  <button className="m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary">
+                  <button className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${` ${question.userVote == -1 ? "bg-rose-100 text-rose-600" : ""}`}`}>
                     <ArrowBigDown />
                   </button>
                 </TooltipTrigger>
@@ -113,7 +114,7 @@ export default function CardDiscus({ question }) {
                     // onClick={handleButtonClick}
                   >
                     <MessageCircleMore size={20} />{" "}
-                    <span className="font-bold ml-0">4</span>
+                    <span className="font-bold ml-0">{question.answer_count}</span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Replies</TooltipContent>
