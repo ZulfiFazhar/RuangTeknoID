@@ -62,7 +62,15 @@ function App() {
           localStorage.setItem("accessToken", response.data.newAccessToken);
         }
 
-        setAuthStatus({ authStatus: true, user: response.data.data });
+        // Get user profiles data
+        const userProfileRes = await api.get(`/user/users/profiles/${response.data.data.userId}`)
+
+        const user = {
+          ...response.data.data,
+          ...userProfileRes.data.data
+        }
+
+        setAuthStatus({ authStatus: true, user });
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setAuthStatus({ authStatus: false });
@@ -71,7 +79,7 @@ function App() {
 
     validateLogin();
   }, []); // Hanya dijalankan sekali saat komponen dimuat
-
+  console.log(authStatus)
   if (authStatus.authStatus === null) return <LoadingPage />;
 
   return (

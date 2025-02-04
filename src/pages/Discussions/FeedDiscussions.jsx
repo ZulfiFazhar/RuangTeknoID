@@ -35,7 +35,6 @@ function Discussions({ type = "all" }) {
 
     fetchQuestionsUD();
   }, []);
-  console.log("Data Questions: ", questions);
 
   return (
     <div className="m-auto h-full">
