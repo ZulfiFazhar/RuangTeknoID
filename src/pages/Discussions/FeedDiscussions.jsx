@@ -20,13 +20,23 @@ function Discussions({ type = "all" }) {
         } else {
           const accessToken = localStorage.getItem("accessToken");
           const refreshToken = localStorage.getItem("refreshToken");
-          const response = await api.get("/discussion/get-questions-ud", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-              "x-refresh-token": refreshToken,
-            },
-          });
-          setQuestions(response.data.data);
+          if(type == "bookmark"){
+            const response = await api.get("/discussion/get-questions-ud-bookmarked", {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "x-refresh-token": refreshToken,
+              },
+            });
+            setQuestions(response.data.data);
+          }else{
+            const response = await api.get("/discussion/get-questions-ud", {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "x-refresh-token": refreshToken,
+              },
+            });
+            setQuestions(response.data.data);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -34,13 +44,46 @@ function Discussions({ type = "all" }) {
     };
 
     fetchQuestionsUD();
-  }, []);
+  }, [type, authStatus.authStatus]);
+
+  const bookmarkDiscussion = async (discussionId) => {
+    if (!authStatus.authStatus) {
+      alert("You need to be login to bookmark a discussion");
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    try {
+      await api.post(
+        `discussion/toggle-bookmark/${discussionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "x-refresh-token": refreshToken,
+          },
+        }
+      );
+
+      setQuestions((prevQuestions) =>
+        prevQuestions.map((question) =>
+          question.discussionId === discussionId
+            ? { ...question, isBookmarked: !question.isBookmarked }
+            : question
+        )
+      );
+    } catch (error) {
+      alert("Error bookmarking discussion");
+    }
+  };
 
   return (
     <div className="m-auto h-full">
       {questions.map((question) => (
         <div className="grid gap-4" key={question.discussionId}>
-          <CardDiscus question={question} />
+          <CardDiscus question={question} bookmarkDiscussion={bookmarkDiscussion} />
           <Separator />
         </div>
       ))}
