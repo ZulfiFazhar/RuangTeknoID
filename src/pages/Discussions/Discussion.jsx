@@ -160,7 +160,12 @@ function Discussion() {
 
       // Update answers state
       setAnswers((prevAnswers) => {
-        return [response.data.data.newAnswer, ...prevAnswers];
+        let newAnswer = response.data.data.newAnswer;
+        newAnswer.author = {
+          ...newAnswer.author,
+          profile_image_url: authStatus.user.profile_image_url
+        };
+        return [newAnswer, ...prevAnswers];
       });
     } catch (error) {
       console.log(error);
@@ -364,11 +369,47 @@ function Discussion() {
     }
   };
 
+  const bookmarkDiscussion = async () => {
+    if (!authStatus.authStatus) {
+      alert("You need to be login to bookmark a discussion");
+      return;
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    try {
+      await api.post(
+        `discussion/toggle-bookmark/${question.discussion.discussionId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "x-refresh-token": refreshToken,
+          },
+        }
+      );
+
+      setQuestion((prevQuestion) => {
+        return {
+          ...prevQuestion,
+          userDiscussion: {
+            ...prevQuestion.userDiscussion,
+            isBookmarked: !prevQuestion.userDiscussion.isBookmarked,
+          },
+        }
+      });
+
+    } catch (error) {
+      alert("Error bookmarking discussion");
+    }
+  };
+
   useEffect(() => {
     console.log("Updated botAnswer", botAnswer);
   }, [botAnswer]);
 
-  console.log("question", question);
+  // console.log("question", question);
   // console.log("Answer", answers);
 
   if (!question) {
@@ -433,7 +474,13 @@ function Discussion() {
                       onClick={() => handleVote("up", question.userDiscussion?.userVote)}
                       className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${question.userDiscussion?.userVote === 1 ? "bg-emerald-100 text-emerald-600" : ""}`}
                     >
-                      <ArrowBigUp className={``} />{" "}
+                      <ArrowBigUp 
+                        className={`${
+                          question.userDiscussion?.userVote == 1
+                            ? "fill-emerald-600 text-emerald-600"
+                            : ""
+                        }`}
+                      />{" "}
                       <span className={`pr-1 font-bold ml-0 `}>
                         {question.discussion.votes}
                       </span>
@@ -447,7 +494,13 @@ function Discussion() {
                       className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${question.userDiscussion?.userVote === -1 ? "bg-rose-100 text-rose-600" : ""}`}
                       onClick={() => handleVote("down", question.userDiscussion?.userVote)}
                     >
-                      <ArrowBigDown />
+                      <ArrowBigDown 
+                        className={`${
+                          question.userDiscussion?.userVote == -1
+                            ? "fill-rose-600 text-rose-600"
+                            : ""
+                        }`}
+                      />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Downvote</TooltipContent>
@@ -471,11 +524,26 @@ function Discussion() {
 
                 <Tooltip>
                   <TooltipTrigger>
-                    <button
+                    {/* <button
                       className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg `}
                       // onClick={() => bookmarkPost()}
                     >
                       <Bookmark size={20} />
+                    </button> */}
+                    <button
+                      className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg ${
+                        question.userDiscussion?.isBookmarked == 1 ? "bg-fuchsia-100" : ""
+                      }`}
+                      onClick={bookmarkDiscussion}
+                    >
+                      <Bookmark
+                        size={20}
+                        className={
+                          question.userDiscussion?.isBookmarked == 1
+                            ? "fill-fuchsia-600 text-fuchsia-600"
+                            : ""
+                        }
+                      />
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Bookmark</TooltipContent>
@@ -531,7 +599,7 @@ function Discussion() {
                 <Link to={`/users/${answer.author.userId}`}>
                   <Avatar className="w-9 h-9">
                     <AvatarImage
-                      src="https://github.com/shadcn.png"
+                      src={answer.author.profile_image_url}
                       alt="@shadcn"
                     />
                     <AvatarFallback>CN</AvatarFallback>

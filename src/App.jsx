@@ -79,7 +79,7 @@ function App() {
 
     validateLogin();
   }, []); // Hanya dijalankan sekali saat komponen dimuat
-  console.log(authStatus)
+
   if (authStatus.authStatus === null) return <LoadingPage />;
 
   return (
