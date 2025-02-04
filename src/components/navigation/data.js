@@ -9,6 +9,7 @@ import {
   Search,
   CircleFadingPlus,
   MessageSquareDiff,
+  UtilityPole,
 } from "lucide-react";
 
 export const data = {
@@ -96,4 +97,23 @@ export const idBehindUrl = [
     title: "User",
     frontUrl: "users",
   },
+  {
+    title: "Diskusi",
+    frontUrl: "discussions",
+  },
 ];
+
+export const otherUrl = [
+  {
+    title: "User Profile",
+    url: "/users/profile"
+  },
+  {
+    title: "User Settings",
+    url: "/users/settings"
+  },
+  {
+    title: "User Dashboard",
+    url: "/users/dashboard"
+  }
+]

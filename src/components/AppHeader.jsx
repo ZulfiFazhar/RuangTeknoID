@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { data, idBehindUrl } from "@/components/navigation/data";
+import { data, idBehindUrl, otherUrl } from "@/components/navigation/data";
 
 export function AppHeader() {
   const location = useLocation();
@@ -38,6 +38,13 @@ export function AppHeader() {
     if (unregNav) {
       unregNav.url = url;
       return unregNav;
+    }
+
+    // Other navigation url
+    const otherNav = otherUrl.find((item) => item.url === url);
+    if (otherNav) {
+      otherNav.url = url;
+      return otherNav;
     }
     return null;
   };
