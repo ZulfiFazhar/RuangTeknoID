@@ -18,7 +18,7 @@ import NewPosts from "./pages/Posts/NewPost";
 import EditPost from "./pages/Posts/EditPost";
 
 // Discussions Pages
-import Discussions from "./pages/Discussions/Discussions";
+import Discussions from "./pages/Discussions";
 import NewDiscussion from "./pages/Discussions/NewDiscussion";
 import Discussion from "./pages/Discussions/Discussion";
 import EditDiscussion from "./pages/Discussions/EditDiscussion";
