@@ -368,7 +368,8 @@ function Discussion() {
     console.log("Updated botAnswer", botAnswer);
   }, [botAnswer]);
 
-  console.log("Answer", answers);
+  console.log("question", question);
+  // console.log("Answer", answers);
 
   if (!question) {
     return <LoadingPage />;
@@ -429,8 +430,8 @@ function Discussion() {
                 <Tooltip>
                   <TooltipTrigger>
                     <button
-                      // onClick={() => handleVote("up", userPost.userVote)}
-                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 `}
+                      onClick={() => handleVote("up", question.userDiscussion?.userVote)}
+                      className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${question.userDiscussion?.userVote === 1 ? "bg-emerald-100 text-emerald-600" : ""}`}
                     >
                       <ArrowBigUp className={``} />{" "}
                       <span className={`pr-1 font-bold ml-0 `}>
@@ -443,8 +444,8 @@ function Discussion() {
                 <Tooltip>
                   <TooltipTrigger>
                     <button
-                      className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary `}
-                      // onClick={() => handleVote("down", userPost.userVote)}
+                      className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${question.userDiscussion?.userVote === -1 ? "bg-rose-100 text-rose-600" : ""}`}
+                      onClick={() => handleVote("down", question.userDiscussion?.userVote)}
                     >
                       <ArrowBigDown />
                     </button>
@@ -462,7 +463,7 @@ function Discussion() {
                       // onClick={toggleComments}
                     >
                       <MessageCircleMore size={20} />{" "}
-                      <span className="font-bold ml-0">1</span>
+                      <span className="font-bold ml-0">{question.discussion.answer_count}</span>
                     </button>
                   </TooltipTrigger>
                   <TooltipContent>Replies</TooltipContent>

@@ -18,7 +18,7 @@ import NewPosts from "./pages/Posts/NewPost";
 import EditPost from "./pages/Posts/EditPost";
 
 // Discussions Pages
-import Discussions from "./pages/Discussions/Discussions";
+import Discussions from "./pages/Discussions";
 import NewDiscussion from "./pages/Discussions/NewDiscussion";
 import Discussion from "./pages/Discussions/Discussion";
 import EditDiscussion from "./pages/Discussions/EditDiscussion";
@@ -62,7 +62,15 @@ function App() {
           localStorage.setItem("accessToken", response.data.newAccessToken);
         }
 
-        setAuthStatus({ authStatus: true, user: response.data.data });
+        // Get user profiles data
+        const userProfileRes = await api.get(`/user/users/profiles/${response.data.data.userId}`)
+
+        const user = {
+          ...response.data.data,
+          ...userProfileRes.data.data
+        }
+
+        setAuthStatus({ authStatus: true, user });
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         setAuthStatus({ authStatus: false });
@@ -71,7 +79,7 @@ function App() {
 
     validateLogin();
   }, []); // Hanya dijalankan sekali saat komponen dimuat
-
+  console.log(authStatus)
   if (authStatus.authStatus === null) return <LoadingPage />;
 
   return (

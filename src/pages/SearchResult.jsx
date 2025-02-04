@@ -5,6 +5,8 @@ import { AuthContext } from "@/components/auth/auth-context";
 import api from "@/api/api";
 import LoadingPage from "@/components/ui/loading-page";
 import CardPost from "@/components/post/CardPost";
+import Discussions from "@/pages/Discussions/FeedDiscussions";
+import { Button } from "@/components/ui/button";
 
 export default function SearchResult({ type = "all" }) {
   const location = useLocation();
@@ -15,6 +17,7 @@ export default function SearchResult({ type = "all" }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -149,6 +152,10 @@ export default function SearchResult({ type = "all" }) {
     }
   };
 
+  const handlePageChange = (page) => {
+    if (currentPage !== page) setCurrentPage(page);
+  };
+
   if (loading) {
     return <LoadingPage />;
   }
@@ -158,20 +165,45 @@ export default function SearchResult({ type = "all" }) {
   }
   console.log(posts);
   return (
-    <div className="flex flex-col gap-4 p-4 w-4/5 m-auto">
+    <div className="grid gap-4 w-4/5 m-auto mt-0">
       <h1 className="text-xl font-bold text-zinc-400">
-        Result for <span className="text-black">{searchKeyword}</span>
+        Hasil pencarian untuk{" "}
+        <span className="text-black">{searchKeyword}</span>
       </h1>
-      {/* <pre>{JSON.stringify(posts, null, 2)}</pre>{" "} */}
-      <div className="m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {posts.map((post) => (
-          <CardPost
-            key={post.postId}
-            post={post}
-            bookmarkPost={bookmarkPost}
-            handleVote={handleVote}
-          />
-        ))}
+      <div className="flex mb-2 gap-2 bg-gray-100 w-fit p-2 rounded-lg">
+        <Button
+          variant="outline"
+          className={`p-4 rounded-lg hover:bg-white ${
+            currentPage === 1 ? "" : "border-none bg-transparent shadow-none"
+          }`}
+          onClick={() => handlePageChange(1)}
+        >
+          Artikel
+        </Button>
+        <Button
+          variant="outline"
+          className={`p-4 rounded-lg hover:bg-white ${
+            currentPage === 2 ? "" : "border-none bg-transparent shadow-none"
+          }`}
+          onClick={() => handlePageChange(2)}
+        >
+          Diskusi
+        </Button>
+      </div>
+      <div>
+        {currentPage === 1 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {posts.map((post) => (
+              <CardPost
+                key={post.postId}
+                post={post}
+                bookmarkPost={bookmarkPost}
+                handleVote={handleVote}
+              />
+            ))}
+          </div>
+        )}
+        {currentPage === 2 && <Discussions type="bookmark" />}
       </div>
     </div>
   );

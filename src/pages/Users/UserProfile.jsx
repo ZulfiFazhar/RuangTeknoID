@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useContext, useState, useEffect } from "react";
+import { AuthContext } from "@/components/auth/auth-context";
+import LoginFirst from "@/components/auth/login-first";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -17,26 +19,37 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-function handleEditProfile() {}
-
 function UserProfile() {
+  const { authStatus } = useContext(AuthContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
+  const navigate = useNavigate();
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    // redirect to home
+    navigate("/");
+  };
+
+  const handleEditProfile = () => {
+  }
+
   return (
     <div className="space-y-5 w-4/5 m-auto">
-      <Button
-        variant="link"
-        onClick={handleEditProfile}
+      <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
+      <Link
+        to="/users/settings"
         className="underline p-0 text-xl font-bold"
       >
-        Edit Profile
-      </Button>
+        Update Profile
+      </Link>
       <Card className="py-3 rounded-lg flex items-center justify-between space-x-4 p-4">
         <div className="flex items-center space-x-4">
           <Avatar className="w-16 h-16">
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src={authStatus.user.profile_image_url} alt="@shadcn" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-xl font-bold">rugbyagreeable</h2>
+            <h2 className="text-xl font-bold">{authStatus.user.name}</h2>
             <p className="text-sm text-gray-500">
               Bandung <ChevronRight className="size-4 inline" /> Dipatiukur
             </p>
