@@ -98,7 +98,7 @@ function Post() {
           }
         );
         setUserPost((prevUserPost) => res.data.data);
-        console.log("User post: ", userPost);
+        // console.log("User post: ", userPost);
       } catch (error) {
         alert("Error getting user post");
       }
@@ -123,7 +123,7 @@ function Post() {
 
     getComments();
   }, []);
-  console.log("Comments: ", comments);
+  // console.log("Comments: ", comments);
 
   const toggleComments = () => {
     setShowComments(!showComments);
@@ -239,7 +239,6 @@ function Post() {
   };
 
   const handleSendComment = async (replyTo) => {
-    console.log("SendComment: ", commentInput);
     if (!authStatus.authStatus) {
       alert("You must be logged in to comment");
       return;
@@ -283,11 +282,18 @@ function Post() {
           updatedReplyInput[replyTo] = "";
           return updatedReplyInput;
         });
-
+        // console.log(res.data.data)
         // update replies state
         setReplies((prevReplies) => {
           const updatedReplies = { ...prevReplies };
-          updatedReplies[replyTo] = [res.data.data, ...prevReplies[replyTo]];
+          updatedReplies[replyTo] = [
+            {
+              ...res.data.data,
+              name: authStatus.user.name,
+              profile_image_url: authStatus.user.profile_image_url,
+            },
+            ...prevReplies[replyTo],
+          ];
           return updatedReplies;
         });
       } else {
@@ -296,7 +302,11 @@ function Post() {
 
         // update comments state
         setComments((prevComments) => [
-          { ...res.data.data, name: authStatus.user.name },
+          {
+            ...res.data.data,
+            name: authStatus.user.name,
+            profile_image_url: authStatus.user.profile_image_url,
+          },
           ...prevComments,
         ]);
       }
@@ -346,7 +356,7 @@ function Post() {
       alert("Error deleting comment");
     }
   };
-  console.log("Post data: " + JSON.stringify(post));
+  // console.log("Post data: " + JSON.stringify(post));
 
   if (!post) return <LoadingPage />;
   return (
@@ -380,7 +390,10 @@ function Post() {
           </Link>
         </div>
 
-        <h1 className="font-bold text-2xl m-0 p-0">{post.post.title}</h1>
+        <MarkdownComponent
+          content={post.post.title}
+          className="font-bold text-3xl m-0 p-0"
+        />
 
         <div className="flex flex-row flex-wrap gap-2.5">
           {post.hashtags.map((hashtag, index) => (
@@ -635,7 +648,7 @@ function Post() {
                               <Link to={`/users/${comment.userId}`}>
                                 <Avatar className="w-9 h-9">
                                   <AvatarImage
-                                    src={comment.profile_image_url}
+                                    src={reply.profile_image_url}
                                     alt="@shadcn"
                                   />
                                   <AvatarFallback>CN</AvatarFallback>
@@ -645,7 +658,7 @@ function Post() {
                                 <div className="flex flex-row justify-between items-center">
                                   <div className="flex flex-col">
                                     <p className="font-semibold text-sm">
-                                      {comment.name}
+                                      {reply.name}
                                     </p>
                                     <p className="text-[0.75rem] text-neutral-600">
                                       {formatDate(reply.createdAt)}

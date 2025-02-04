@@ -28,10 +28,15 @@ import {
 import formatDate from "@/lib/formatDate";
 import MarkdownComponent from "@/components/ui/markdown-component";
 
-export default function CardDiscus({ question }) {
+export default function CardDiscus({ question, bookmarkDiscussion }) {
   const navigate = useNavigate();
   const handleClick = () => {
     navigate(`/discussions/${question.discussionId}`);
+  };
+
+  const handleBookmarkClick = (event) => {
+    event.stopPropagation();
+    bookmarkDiscussion(question.discussionId);
   };
 
   const truncateText = (text, maxLength) => {
@@ -87,7 +92,13 @@ export default function CardDiscus({ question }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button className={`m-0 p-2 rounded-l-lg flex gap-1 hover:bg-emerald-100 hover:text-emerald-600 ${` ${question.userVote == 1 ? "bg-emerald-100 text-emerald-600" : ""}`}`}>
-                    <ArrowBigUp />{" "}
+                    <ArrowBigUp 
+                      className={`${
+                        question.userVote == 1
+                          ? "fill-emerald-600 text-emerald-600"
+                          : ""
+                      }`}
+                    />{" "}
                     <span className="pr-1 font-bold ml-0">
                       {question.votes}
                     </span>
@@ -98,7 +109,13 @@ export default function CardDiscus({ question }) {
               <Tooltip>
                 <TooltipTrigger>
                   <button className={`m-0 p-2 rounded-r-l  hover:bg-rose-100 hover:text-rose-600 rounded-r-lg border-l-2 border-secondary ${` ${question.userVote == -1 ? "bg-rose-100 text-rose-600" : ""}`}`}>
-                    <ArrowBigDown />
+                    <ArrowBigDown 
+                      className={`${
+                        question.userVote == -1
+                          ? "fill-rose-600 text-rose-600"
+                          : ""
+                      }`}
+                    />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Downvote</TooltipContent>
@@ -121,8 +138,23 @@ export default function CardDiscus({ question }) {
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger>
-                  <button className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg">
+                  {/* <button className="cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg" onClick={handleBookmarkClick}>
                     <Bookmark />
+                  </button> */}
+                  <button
+                    className={`cursor-pointer hover:text-fuchsia-600 hover:bg-fuchsia-100 p-2 rounded-lg ${
+                      question.isBookmarked == 1 ? "bg-fuchsia-100" : ""
+                    }`}
+                    onClick={handleBookmarkClick}
+                  >
+                    <Bookmark
+                      size={20}
+                      className={
+                        question.isBookmarked == 1
+                          ? "fill-fuchsia-600 text-fuchsia-600"
+                          : ""
+                      }
+                    />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>Bookmark</TooltipContent>
