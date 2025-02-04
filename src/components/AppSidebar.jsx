@@ -3,30 +3,24 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarFooter,
+  SidebarMenu,
+  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { NavIdentity } from "@/components/navigation/NavIdentity";
 import { NavMain } from "@/components/navigation/NavMain";
-import { NavUser } from "@/components/navigation/NavUser";
-// import { useContext } from "react";
-// import { AuthContext } from "../components/auth/auth-context";
-// import { Button } from "../components/ui/button";
-// import { Link } from "react-router-dom";
 
 export function AppSidebar() {
-  // const { authStatus } = useContext(AuthContext);
-
   return (
-    <Sidebar collapsible="icon">
-      <SidebarHeader>
-        <NavIdentity />
+    <Sidebar collapsible="icon" className="mt-16">
+      <SidebarHeader className="pb-0">
+        <SidebarMenu>
+          <SidebarMenuItem className="flex items-center justify-between">
+            <span className="menu-text ml-2 mt-1 font-bold">Menu</span>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser />
-      </SidebarFooter>
     </Sidebar>
   );
 }

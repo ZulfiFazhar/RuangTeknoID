@@ -80,7 +80,7 @@ export default function ChatbotPage() {
     <div>
       <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       {authStatus.authStatus ? (
-        <div className="flex flex-col items-center justify-center h-[88vh]">
+        <div className="flex flex-col items-center justify-center h-[86vh]">
           {messages.length === 0 && (
             <h1 className="text-3xl font-semibold text-center mb-10 cursor-default">
               Hello, {authStatus.user.name.split(" ")[0]}!

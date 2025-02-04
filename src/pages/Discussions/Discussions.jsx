@@ -36,7 +36,7 @@ function Discussions() {
 
   return (
     <div className="w-4/5 m-auto h-full">
-      <h1 className="text-2xl font-bold mb-4">Forum Diskusi</h1>
+      <h1 className="text-2xl font-bold">Forum Diskusi</h1>
       {questions.map((question) => (
         <div className="grid gap-4" key={question.discussionId}>
           <CardDiscus question={question} />

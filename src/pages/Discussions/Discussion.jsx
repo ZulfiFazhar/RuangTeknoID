@@ -403,7 +403,10 @@ function Discussion() {
             className="flex flex-row items-center gap-4"
           >
             <Avatar>
-              <AvatarImage src={question.author.profile_image_url} alt="@shadcn" />
+              <AvatarImage
+                src={question.author.profile_image_url}
+                alt="@shadcn"
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="flex flex-col">

@@ -18,7 +18,6 @@ function Home({ type = "all" }) {
           setPosts(res.data.data);
         } else {
           const accessToken = localStorage.getItem("accessToken");
-          const refreshToken = localStorage.getItem("refreshToken");
 
           if (type === "bookmark") {
             const res = await api.get("post/get-bookmarked", {
@@ -30,24 +29,37 @@ function Home({ type = "all" }) {
             return;
           }
 
-          const res = await api.get("post/recommedations", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-
-          setPosts(res.data.data);
+          try {
+            const res = await api.get("post/recommedations", {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            });
+            setPosts(res.data.data);
+          } catch (error) {
+            if (error.response && error.response.status === 404) {
+              console.warn(
+                "Recommendations not found, fetching unauthenticated data..."
+              );
+              const fallbackRes = await api.get(
+                "post/get-detail-unauthenticated"
+              );
+              setPosts(fallbackRes.data.data);
+            } else {
+              throw error; // Jika error bukan 404, lempar kembali ke catch utama
+            }
+          }
         }
       } catch (error) {
         alert("Error getting posts");
+        console.log(error);
       }
     };
 
     getPosts();
-  }, []);
+  }, [authStatus.authStatus, type]);
 
   const bookmarkPost = async (postId) => {
-    // Check auth status
     if (!authStatus.authStatus) {
       alert("You need to be login to bookmark a post");
       return;
@@ -68,25 +80,19 @@ function Home({ type = "all" }) {
         }
       );
 
-      // update post state
-      setPosts((prevPosts) => {
-        return prevPosts.map((post) => {
-          if (post.postId === postId) {
-            return {
-              ...post,
-              isBookmarked: !post.isBookmarked,
-            };
-          }
-          return post;
-        });
-      });
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.postId === postId
+            ? { ...post, isBookmarked: !post.isBookmarked }
+            : post
+        )
+      );
     } catch (error) {
       alert("Error bookmarking post");
     }
   };
 
   const handleVote = async (postId, voteType, curUserVote) => {
-    // Check auth status
     if (!authStatus.authStatus) {
       alert("You need to be login to vote");
       return;
@@ -95,8 +101,7 @@ function Home({ type = "all" }) {
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
 
-    let vote;
-    let votesIncrement;
+    let vote, votesIncrement;
     if (curUserVote == 1) {
       vote = voteType == "up" ? 0 : -1;
       votesIncrement = voteType == "up" ? -1 : -2;
@@ -123,25 +128,17 @@ function Home({ type = "all" }) {
         }
       );
 
-      // update post state
-      setPosts((prevPosts) => {
-        return prevPosts.map((post) => {
-          if (post.postId === postId) {
-            return {
-              ...post,
-              userVote: vote,
-              votes: post.votes + votesIncrement,
-            };
-          }
-          return post;
-        });
-      });
+      setPosts((prevPosts) =>
+        prevPosts.map((post) =>
+          post.postId === postId
+            ? { ...post, userVote: vote, votes: post.votes + votesIncrement }
+            : post
+        )
+      );
     } catch (error) {
       alert("Error voting");
     }
   };
-
-  console.log(posts);
 
   return (
     <div>
