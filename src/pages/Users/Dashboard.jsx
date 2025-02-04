@@ -26,6 +26,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useContext, useState, useEffect } from "react";
+import { AuthContext } from "@/components/auth/auth-context";
+import LoginFirst from "@/components/auth/login-first";
+import { Link, useNavigate } from "react-router-dom";
 
 const chartData = [
   { month: "January", desktop: 186, mobile: 80 },
@@ -50,16 +54,27 @@ const chartConfig = {
 };
 
 export default function ProfileDashboard() {
+  const { authStatus } = useContext(AuthContext);
+  const [isDialogOpen, setIsDialogOpen] = useState(!authStatus.authStatus);
+  const navigate = useNavigate();
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+    // redirect to home
+    navigate("/");
+  };
+
   return (
     <div className="container mx-auto mt-4 w-4/5">
+      <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       <Card className="p-4 mb-6">
         <div className="flex items-center space-x-4">
           <Avatar>
-            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            <AvatarImage src={authStatus.user.profile_image_url} alt="@shadcn" />
             <AvatarFallback>U</AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-xl font-semibold">rugbyagreeable</h2>
+            <h2 className="text-xl font-semibold">{authStatus.user.name}</h2>
             <p className="text-gray-500">Software Engineer</p>
           </div>
         </div>
