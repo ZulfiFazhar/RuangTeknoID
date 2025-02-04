@@ -74,7 +74,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={authStatus.user.avatar}
+                  src={authStatus.user.profile_image_url}
                   alt={authStatus.user.name}
                 />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
