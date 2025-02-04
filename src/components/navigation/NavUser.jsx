@@ -70,7 +70,7 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <button
               size="lg"
-              className="flex gap-2 py-2 px-4 hover:bg-gray-100 rounded-lg"
+              className="flex gap-2 p-2 sm:px-4 hover:bg-gray-100 rounded-lg"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
@@ -79,7 +79,7 @@ export function NavUser() {
                 />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="sm:grid hidden flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold capitalize">
                   {authStatus.user.name}
                 </span>

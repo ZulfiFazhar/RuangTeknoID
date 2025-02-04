@@ -28,7 +28,7 @@ function Bookmark() {
       <LoginFirst isOpen={isDialogOpen} onClose={handleCloseDialog} />
       <div className="w-4/5 m-auto grid gap-2">
         <h1 className="text-2xl font-bold">Penanda</h1>
-        <div className="flex mb-2 gap-2 bg-gray-100 w-fit p-2 rounded-lg">
+        <div className="flex gap-2 bg-gray-100 w-fit p-2 rounded-lg">
           <Button
             variant="outline"
             className={`p-4 rounded-lg hover:bg-white ${
