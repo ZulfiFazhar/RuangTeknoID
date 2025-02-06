@@ -46,13 +46,12 @@ function Feed({ type = "all" }) {
               );
               setPosts(fallbackRes.data.data);
             } else {
-              throw error; // Jika error bukan 404, lempar kembali ke catch utama
+              throw error;
             }
           }
         }
       } catch (error) {
         console.log(error);
-        window.location.reload();
       }
     };
 

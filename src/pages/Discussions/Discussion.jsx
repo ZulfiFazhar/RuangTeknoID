@@ -418,7 +418,7 @@ function Discussion() {
   return (
     <div>
       {/* new */}
-      <div className="w-4/5 m-auto grid gap-2 mb-10">
+      <div className="sm:w-4/5 w-full m-auto grid gap-2 mb-10">
         {/* haashtag */}
         <div className="flex flex-row flex-wrap gap-2.5">
           {question.hashtags.map((hashtag, index) => (
@@ -588,9 +588,10 @@ function Discussion() {
           {/* AI Answer Button */}
           <div className="flex flex-col justify-start items-start">
             {loading ? (
-              <Spinner animation="border" role="status">
-                <span>Loading...</span>
-              </Spinner>
+              <div className="flex flex-row gap-2">
+                <Spinner size="small" animation="border" role="status" />
+                <span> Loading...</span>
+              </div>
             ) : (
               <Button
                 variant="link"
@@ -603,7 +604,7 @@ function Discussion() {
             )}
           </div>
           {answers.map((answer) => (
-            <div key={answer.discussion.discussionId} className="">
+            <div key={answer.discussion.discussionId} className="mb-3">
               <div className="flex flex-row items-start gap-3">
                 <Link to={`/users/${answer.author.userId}`}>
                   <Avatar className="w-9 h-9">
@@ -634,6 +635,7 @@ function Discussion() {
                         <DropdownMenuContent>
                           <DropdownMenuItem>
                             <button
+                              className="text-red-500 w-fit"
                               onClick={() =>
                                 handleDeleteAnswer(
                                   answer.discussion.discussionId
@@ -647,10 +649,10 @@ function Discussion() {
                       </DropdownMenu>
                     )}
                   </div>
-                  <div className="-ml-11 sm:-ml-0 pt-2 max-w-[calc(100vh*0.6)]">
+                  <div className="sm:max-w-full max-w-[90vh] -ml-11 sm:-ml-0 pt-2 ">
                     <MarkdownComponent
                       content={answer.discussion.content}
-                      className="max-w-full break-words"
+                      className="sm:max-w-full max-w-[90vh] break-words"
                     />
                   </div>
                 </div>
