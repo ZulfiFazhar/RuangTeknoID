@@ -675,6 +675,7 @@ function Post() {
                                       <DropdownMenuContent>
                                         <DropdownMenuItem>
                                           <button
+                                            className="text-red-500 w-fit"
                                             onClick={() =>
                                               handleDeleteComment(
                                                 reply.commentId,
