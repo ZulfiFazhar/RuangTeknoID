@@ -1,13 +1,15 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 import api from "@/api/api";
 import { AuthContext } from "@/components/auth/auth-context";
 import CardPost from "@/components/post/CardPost";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Feed({ type = "all" }) {
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { authStatus } = useContext(AuthContext);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ function Feed({ type = "all" }) {
               },
             });
             setPosts(res.data.data);
+            setLoading(false);
             return;
           }
 
@@ -52,6 +55,8 @@ function Feed({ type = "all" }) {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -139,17 +144,29 @@ function Feed({ type = "all" }) {
     }
   };
 
+  const SkeletonItems = useMemo(
+    () =>
+      [...Array(12)].map((_, index) => (
+        <div key={index} className="h-[22rem] w-full">
+          <Skeleton className="w-full h-full rounded-xl" />
+        </div>
+      )),
+    []
+  );
+
   return (
     <div>
       <div className="m-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {posts.map((post) => (
-          <CardPost
-            key={post.postId}
-            post={post}
-            bookmarkPost={bookmarkPost}
-            handleVote={handleVote}
-          />
-        ))}
+        {loading || posts.length === 0
+          ? SkeletonItems
+          : posts.map((post) => (
+              <CardPost
+                key={post.postId}
+                post={post}
+                bookmarkPost={bookmarkPost}
+                handleVote={handleVote}
+              />
+            ))}
       </div>
     </div>
   );

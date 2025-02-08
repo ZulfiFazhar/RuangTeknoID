@@ -1,14 +1,16 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useMemo } from "react";
 // import { Link } from "react-router-dom";
 import api from "@/api/api";
 import { AuthContext } from "@/components/auth/auth-context";
 import CardDiscus from "@/components/discussion/CardDiscus";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 function Discussions({ type = "all" }) {
   const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { authStatus } = useContext(AuthContext);
 
   useEffect(() => {
@@ -20,15 +22,18 @@ function Discussions({ type = "all" }) {
         } else {
           const accessToken = localStorage.getItem("accessToken");
           const refreshToken = localStorage.getItem("refreshToken");
-          if(type == "bookmark"){
-            const response = await api.get("/discussion/get-questions-ud-bookmarked", {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-                "x-refresh-token": refreshToken,
-              },
-            });
+          if (type === "bookmark") {
+            const response = await api.get(
+              "/discussion/get-questions-ud-bookmarked",
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  "x-refresh-token": refreshToken,
+                },
+              }
+            );
             setQuestions(response.data.data);
-          }else{
+          } else {
             const response = await api.get("/discussion/get-questions-ud", {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
@@ -40,6 +45,8 @@ function Discussions({ type = "all" }) {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false); // Nonaktifkan loading setelah fetch selesai
       }
     };
 
@@ -79,54 +86,32 @@ function Discussions({ type = "all" }) {
     }
   };
 
+  const SkeletonItems = useMemo(
+    () => (
+      <div className="grid gap-4 mt-3">
+        {[...Array(3)].map((_, index) => (
+          <div key={index} className="w-full h-[18rem]">
+            <Skeleton className="w-full h-full rounded-xl" />
+          </div>
+        ))}
+      </div>
+    ),
+    []
+  );
+
   return (
     <div className="m-auto h-full">
-      {questions.map((question) => (
-        <div className="grid gap-4" key={question.discussionId}>
-          <CardDiscus question={question} bookmarkDiscussion={bookmarkDiscussion} />
-          <Separator />
-        </div>
-      ))}
-      {/* {questions.map((question) => (
-        <div
-          key={question.discussionId}
-          className="w-full bg-gray-300 mb-2 p-2 rounded-md"
-        >
-          <h1 className="text-xl font-bold">{question.title}</h1>
-          <p>{question.content}</p>
-          <Link
-            to={`/discussions/${question.discussionId}`}
-            state={{ fromLink: true }}
-            className="text-blue-600"
-          >
-            See discussion detail
-          </Link>
-          <p>views : {question.views}</p>
-          <p>votes : {question.votes}</p>
-
-          <div className="flex w-1/4 mt-3 justify-between items-center">
-            <Link
-              to={`/discussions/${question.discussionId}`}
-              state={{ fromLink: true }}
-              className={`px-2 py-1 rounded-md border border-black ${
-                question.userVote === 1 ? "bg-gray-500" : "bg-gray-300"
-              }`}
-            >
-              Up Vote
-            </Link>
-            <span className="text-lg">{question.votes}</span>
-            <Link
-              to={`/discussions/${question.discussionId}`}
-              state={{ fromLink: true }}
-              className={`px-2 py-1 rounded-md border border-black ${
-                question.userVote === -1 ? "bg-gray-500" : "bg-gray-300"
-              }`}
-            >
-              Down Vote
-            </Link>
-          </div>
-        </div>
-      ))} */}
+      {loading || questions.length === 0
+        ? SkeletonItems
+        : questions.map((question) => (
+            <div className="grid gap-4" key={question.discussionId}>
+              <CardDiscus
+                question={question}
+                bookmarkDiscussion={bookmarkDiscussion}
+              />
+              <Separator />
+            </div>
+          ))}
     </div>
   );
 }
