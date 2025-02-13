@@ -67,9 +67,9 @@ export default function CardPost({ post, bookmarkPost, handleVote }) {
             `https://images.unsplash.com/photo-1724166573009-4634b974ebb2?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`
           }
           alt="content-image"
-          className="rounded-xl object-cover w-full h-full"
+          className="rounded-xl object-cover w-full h-48"
         />
-        <p>{post.title}</p>
+        <p className="truncate">{post.title}</p>
         <div className="flex flex-row flex-wrap gap-1">
           {post.hashtags?.split(",").map((hashtag, index) => (
             <Badge
